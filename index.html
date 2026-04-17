@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Xleb Games</title>
+    <style>
+        :root { --bg: #0f172a; --card-bg: #1e293b; --accent: #38bdf8; --text: #f8fafc; --secondary: #94a3b8; --btn-inactive: #334155; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; text-align: center; }
+        .container { width: 90%; max-width: 400px; }
+        h1 { font-weight: 800; color: var(--accent); margin-bottom: 20px; }
+        .card { background: var(--card-bg); border-radius: 24px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        input { background: var(--bg); border: 1px solid var(--secondary); color: white; padding: 10px; border-radius: 12px; width: 60px; text-align: center; font-size: 18px; }
+        .mode-selector { display: flex; gap: 10px; margin-top: 15px; }
+        .mode-btn { background: var(--btn-inactive); color: var(--secondary); padding: 10px; border-radius: 12px; font-size: 14px; flex: 1; cursor: pointer; border: none; }
+        .mode-btn.active { background: var(--accent); color: var(--bg); font-weight: bold; }
+        button.main-btn { background: var(--accent); color: var(--bg); border: none; padding: 16px 32px; font-size: 16px; font-weight: 700; border-radius: 16px; cursor: pointer; width: 100%; transition: 0.2s; }
+        button.main-btn:active { transform: scale(0.95); }
+        .footer-text { font-size: 12px; color: var(--secondary); margin-top: 20px; line-height: 1.5; padding: 0 10px; }
+        
+        /* Стили ссылки */
+        .footer-text a { color: #38bdf8; text-decoration: underline; font-weight: bold; }
+        
+        .role-img { width: 160px; height: 160px; object-fit: contain; margin: 15px auto; display: block; border-radius: 20px; }
+        .hidden { display: none; }
+        .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); letter-spacing: 1px; }
+        #notification { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--card-bg); color: var(--accent); padding: 15px 25px; border-radius: 20px; border: 1px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.5); font-weight: bold; transition: top 0.5s ease-in-out; z-index: 1000; }
+        #notification.show { top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="notification">Роли розданы, Удачи!</div>
+
+    <div class="container" id="main-menu">
+        <h1>Xleb Games</h1>
+        <button class="main-btn" onclick="showSetup()">ИГРАТЬ В ШПИОНА</button>
+        <p class="footer-text">
+            Спасибо что зашли в мой первый бот, прошу вас подписаться на мой <a href="https://t.me/xlebusek_v_gd" target="_blank" rel="noopener noreferrer">телеграмм канал</a>
+        </p>
+    </div>
+
+    <div class="container hidden" id="setup">
+        <h1>Brawl Spy</h1>
+        <div class="card">
+            <p>Сколько игроков?</p>
+            <input type="number" id="playerCount" value="3" min="1">
+            <p style="margin-top:20px; font-size: 14px; color: var(--secondary);">Количество шпионов</p>
+            <div class="mode-selector">
+                <button id="btn1" class="mode-btn active" onclick="setMode('one')">1 Шпион</button>
+                <button id="btnRnd" class="mode-btn" onclick="setMode('random')">Рандом</button>
+            </div>
+        </div>
+        <button class="main-btn" onclick="startGame()">НАЧАТЬ</button>
+    </div>
+
+    <div class="container hidden" id="game">
+        <div id="roleCard" class="card hidden">
+            <p style="color: var(--secondary); margin: 0;">Твоя роль:</p>
+            <h2 id="roleText" style="font-size: 28px; margin: 10px 0;"></h2>
+            <img id="roleImg" class="role-img" src="">
+            <button class="main-btn" onclick="nextPlayer()" style="background: var(--secondary); color: white;">СКРЫТЬ</button>
+        </div>
+        <div id="tapArea">
+            <div class="card" style="border: 2px dashed var(--secondary); background: transparent;">
+                <p id="playerInstruction"></p>
+            </div>
+            <button class="main-btn" onclick="showRole()">УЗНАТЬ РОЛЬ</button>
+        </div>
+        <p id="playerStatus" style="color: var(--secondary); margin-top: 15px;"></p>
+    </div>
+
+    <div class="version-tag">Версия 1.0</div>
+
+    <script>
+        const brawlers = [{n:"Шелли",id:"Shelly"},{n:"Кольт",id:"Colt"},{n:"Нита",id:"Nita"},{n:"Булл",id:"Bull"},{n:"Брок",id:"Brock"},{n:"Эль Примо",id:"El-Primo"},{n:"Барли",id:"Barley"},{n:"Поко",id:"Poco"},{n:"Роза",id:"Rosa"},{n:"Джесси",id:"Jessie"},{n:"Диномайк",id:"Dynamike"},{n:"Тик",id:"Tick"},{n:"8-Бит",id:"8-Bit"},{n:"Рико",id:"Rico"},{n:"Дэррил",id:"Darryl"},{n:"Пенни",id:"Penny"},{n:"Карл",id:"Carl"},{n:"Джеки",id:"Jacky"},{n:"Пайпер",id:"Piper"},{n:"Пэм",id:"Pam"},{n:"Фрэнк",id:"Frank"},{n:"Биби",id:"Bibi"},{n:"Беа",id:"Bea"},{n:"Нани",id:"Nani"},{n:"Эдгар",id:"Edgar"},{n:"Грифф",id:"Griff"},{n:"Гром",id:"Grom"},{n:"Бонни",id:"Bonnie"},{n:"Мортис",id:"Mortis"},{n:"Тара",id:"Tara"},{n:"Джин",id:"Gene"},{n:"Макс",id:"Max"},{n:"Мистер П.",id:"Mr-P"},{n:"Спраут",id:"Sprout"},{n:"Байрон",id:"Byron"},{n:"Скуик",id:"Squeak"},{n:"Спайк",id:"Spike"},{n:"Ворон",id:"Crow"},{n:"Леон",id:"Leon"},{n:"Сэнди",id:"Sandy"},{n:"Амбер",id:"Amber"},{n:"Мэг",id:"Meg"},{n:"Гейл",id:"Gale"},{n:"Вольт",id:"Surge"},{n:"Коллетт",id:"Colette"},{n:"Лу",id:"Lou"},{n:"Гавс",id:"Ruffs"},{n:"Белль",id:"Belle"},{n:"Базз",id:"Buzz"},{n:"Эш",id:"Ash"},{n:"Лола",id:"Lola"},{n:"Фэнг",id:"Fang"},{n:"Ева",id:"Eve"},{n:"Джанет",id:"Janet"},{n:"Отис",id:"Otis"},{n:"Сэм",id:"Sam"},{n:"Бастер",id:"Buster"},{n:"Мэнди",id:"Mandy"},{n:"R-T",id:"R-T"},{n:"Мэйзи",id:"Maisie"},{n:"Хэнк",id:"Hank"},{n:"Корделиус",id:"Cordelius"},{n:"Даг",id:"Doug"},{n:"Перл",id:"Pearl"},{n:"Чарли",id:"Charlie"},{n:"Мико",id:"Mico"},{n:"Кит",id:"Kit"},{n:"Ларри",id:"Larry"},{n:"Мелоди",id:"Melodie"},{n:"Лили",id:"Lily"},{n:"Драко",id:"Draco"},{n:"Клэнси",id:"Clancy"},{n:"Берри",id:"Berry"},{n:"Мо",id:"Moe"},{n:"Кэндзи",id:"Kenji"},{n:"Финкс",id:"Phinks"},{n:"Анджело",id:"Angelo"},{n:"Зигги",id:"Ziggy"},{n:"Мипл",id:"Meeple"},{n:"Джуджу",id:"Juju"},{n:"Шейд",id:"Shade"},{n:"Глоуберт",id:"Glowbert"},{n:"Сириус",id:"Sirius"},{n:"Наджия",id:"Najia"}];
+        let roles = []; let currentIndex = 0; let spyMode = 'one';
+        function setMode(m) { spyMode = m; document.getElementById('btn1').classList.toggle('active', m === 'one'); document.getElementById('btnRnd').classList.toggle('active', m === 'random'); }
+        function showSetup() { document.getElementById('main-menu').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); }
+        function startGame() {
+            roles = []; currentIndex = 0;
+            let count = parseInt(document.getElementById('playerCount').value) || 3;
+            let spyCount = (spyMode === 'random') ? Math.floor(Math.random() * (count + 1)) : 1;
+            let brawler = brawlers[Math.floor(Math.random() * brawlers.length)];
+            const getImg = (id) => `https://brawlify.com{id}.png`;
+            for(let i=0; i<count; i++) roles.push({ n: brawler.n.toUpperCase(), img: getImg(brawler.id) });
+            let placed = 0;
+            while(placed < spyCount) {
+                let r = Math.floor(Math.random() * count);
+                if(roles[r].n !== "ШПИОН") { roles[r] = { n: "ШПИОН", img: "https://flaticon.com" }; placed++; }
+            }
+            document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); document.getElementById('roleCard').classList.add('hidden'); document.getElementById('tapArea').classList.remove('hidden'); updateStatus();
+        }
+        function showRole() {
+            let r = roles[currentIndex]; document.getElementById('roleText').innerText = r.n;
+            let img = document.getElementById('roleImg'); img.src = r.img;
+            img.onerror = function() { this.src = "https://flaticon.com"; };
+            document.getElementById('roleCard').classList.remove('hidden'); document.getElementById('tapArea').classList.add('hidden');
+        }
+        function nextPlayer() {
+            currentIndex++;
+            if(currentIndex >= roles.length) {
+                document.getElementById('game').classList.add('hidden');
+                document.getElementById('main-menu').classList.remove('hidden');
+                const notify = document.getElementById('notification');
+                notify.classList.add('show');
+                setTimeout(() => { notify.classList.remove('show'); }, 3000);
+            } else { document.getElementById('roleCard').classList.add('hidden'); document.getElementById('tapArea').classList.remove('hidden'); updateStatus(); }
+        }
+        function updateStatus() {
+            document.getElementById('playerStatus').innerText = `Игрок ${currentIndex + 1} из ${roles.length}`;
+            document.getElementById('playerInstruction').innerText = `Передайте телефон Игроку ${currentIndex + 1}`;
+        }
+    </script>
+</body>
+</html>
