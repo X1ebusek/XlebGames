@@ -9,8 +9,9 @@
             --bg: #0f172a; 
             --card-bg: #1e293b; 
             --accent: #38bdf8; 
-            --shadow-color: rgba(56, 189, 248, 0.5); 
+            --shadow-color: rgba(56, 189, 248, 0.4); 
             --text: #f8fafc; 
+            --btn-text-color: #0f172a;
             --secondary: #94a3b8; 
             --btn-inactive: #334155; 
             --card-border: 1px solid rgba(255,255,255,0.1);
@@ -30,6 +31,7 @@
             margin: 0; 
             overflow: hidden; 
             text-align: center; 
+            transition: all 0.5s ease;
         }
         
         .container { 
@@ -49,14 +51,14 @@
         
         button.main-btn { 
             background: var(--accent); 
-            color: var(--bg); 
+            color: var(--btn-text-color); 
             padding: 16px 32px; 
             font-size: 16px; 
             font-weight: 800; 
             border-radius: 16px; 
             width: 100%; 
-            transition: all 0.2s ease; 
-            box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.2); 
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px var(--shadow-color); 
             position: relative;
             overflow: hidden;
             letter-spacing: 0.5px;
@@ -83,8 +85,17 @@
             box-shadow: 0 0px 0 rgba(0,0,0,0.3), 0 5px 10px rgba(0,0,0,0.2); 
         }
 
-        .btn-brawl { background: #38bdf8 !important; color: #0f172a !important; }
-        .btn-mc { background: #4ade80 !important; color: #064e3b !important; }
+        .btn-brawl { background: #38bdf8 !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(56, 189, 248, 0.3) !important;}
+        .btn-mc { background: #4ade80 !important; color: #064e3b !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(74, 222, 128, 0.3) !important;}
+        .btn-cr { background: #fbbf24 !important; color: #451a03 !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(251, 191, 36, 0.3) !important;}
+        .btn-genshin { background: #f8fafc !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(248, 250, 252, 0.3) !important;}
+        .btn-random { 
+            background: linear-gradient(90deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; 
+            background-size: 300% 100% !important;
+            animation: gradientPan 4s linear infinite !important;
+            color: white !important; 
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192, 132, 252, 0.4) !important;
+        }
 
         h1 { 
             font-weight: 800; 
@@ -94,7 +105,7 @@
             text-transform: uppercase; 
             letter-spacing: 1.5px; 
             text-shadow: 0 0 15px var(--shadow-color);
-            transition: color 0.5s;
+            transition: color 0.5s, text-shadow 0.5s;
         }
         
         h2 { 
@@ -102,6 +113,7 @@
             margin: 10px 0; 
             color: var(--accent); 
             text-shadow: 0 0 15px var(--shadow-color); 
+            transition: color 0.5s, text-shadow 0.5s;
         }
 
         .card { 
@@ -113,6 +125,7 @@
             margin-bottom: 20px; 
             width: 100%; 
             box-sizing: border-box; 
+            transition: border-color 0.5s;
         }
         
         .dashed-card { 
@@ -122,6 +135,7 @@
             margin-bottom: 20px; 
             border-radius: 16px; 
             animation: pulseDash 2s infinite alternate;
+            transition: border-color 0.5s;
         }
 
         input { 
@@ -132,7 +146,7 @@
 
         .mode-selector { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
         .mode-btn { background: var(--btn-inactive); color: var(--secondary); padding: 12px; border-radius: 12px; flex: 1; font-weight: 600; transition: all 0.3s; }
-        .mode-btn.active { background: var(--accent); color: var(--bg); transform: scale(1.05); box-shadow: 0 5px 15px var(--shadow-color); }
+        .mode-btn.active { background: var(--accent); color: var(--btn-text-color); transform: scale(1.05); box-shadow: 0 5px 15px var(--shadow-color); }
 
         .role-img-container { 
             width: 180px; height: 180px; margin: 15px auto; 
@@ -150,6 +164,7 @@
         .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); }
 
         @keyframes bgShift { 0% { background-position: 50% 0%; } 100% { background-position: 50% 100%; } }
+        @keyframes gradientPan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
         @keyframes fadeScreenIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         
         @keyframes breathing { 
@@ -168,6 +183,34 @@
             border: 1px solid var(--accent); transition: top 0.6s; z-index: 1000; font-weight: bold;
         }
         #notification.show { top: 40px; }
+
+        /* Специальные стили для рандомной темы */
+        body.theme-random {
+            animation: randomThemeColors 8s linear infinite !important;
+        }
+        body.theme-random .main-btn:not(.secondary-btn) {
+            background: transparent !important;
+            color: white !important;
+            border: 2px solid white;
+            animation: randomThemeBtn 8s linear infinite !important;
+        }
+        body.theme-random .mode-btn.active {
+            color: white !important;
+            animation: randomThemeBtn 8s linear infinite !important;
+        }
+
+        @keyframes randomThemeColors {
+            0% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; }
+            33% { --accent: #c084fc; --shadow-color: rgba(192,132,252,0.5); --btn-text-color: white; }
+            66% { --accent: #818cf8; --shadow-color: rgba(129,140,248,0.5); --btn-text-color: white; }
+            100% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; }
+        }
+        @keyframes randomThemeBtn {
+            0% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;}
+            33% { background: #c084fc; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192,132,252,0.4); border-color:#c084fc;}
+            66% { background: #818cf8; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(129,140,248,0.4); border-color:#818cf8;}
+            100% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;}
+        }
     </style>
 </head>
 <body>
@@ -184,9 +227,12 @@
 
     <div class="container hidden" id="category-menu">
         <h1>Категории</h1>
-        <div class="card" style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="card" style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
             <button class="main-btn btn-brawl" onclick="showSetup('brawl')">BRAWL STARS</button>
             <button class="main-btn btn-mc" onclick="showSetup('minecraft')">MINECRAFT</button>
+            <button class="main-btn btn-cr" onclick="showSetup('clash')">CLASH ROYALE</button>
+            <button class="main-btn btn-genshin" onclick="showSetup('genshin')">GENSHIN IMPACT</button>
+            <button class="main-btn btn-random" onclick="showSetup('random')">🎲 РАНДОМ</button>
         </div>
         <button class="main-btn secondary-btn" onclick="goBackToMain()">НАЗАД</button>
     </div>
@@ -226,15 +272,21 @@
         <p id="playerStatus" style="color: var(--secondary); margin-top: 20px; font-weight: 600; letter-spacing: 1px;"></p>
     </div>
 
-    <div class="version-tag">Версия 2.0</div>
+    <div class="version-tag">Версия 3.0</div>
 
     <script>
         const data = {
             brawl: [
-                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Бонни",id:"bonnie"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Гейл",id:"gale"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Гавс",id:"ruffs"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Даг",id:"doug"},{n:"Перл",id:"pearl"},{n:"Чарли",id:"charlie"},{n:"Мико",id:"mico"},{n:"Кит",id:"kit"},{n:"Ларри",id:"larry"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Шейд",id:"shade"},{n:"Гас",id:"gus"},{n:"Честер",id:"chester"},{n:"Грей",id:"gray"},{n:"Виллоу",id:"willow"},{n:"Чак",id:"chuck"},{n:"Бо",id:"bo"},{n:"Эмз",id:"emz"},{n:"Сту",id:"stu"}
+                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Мико",id:"mico"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Честер",id:"chester"},{n:"Чак",id:"chuck"},{n:"Сту",id:"stu"}
             ],
             minecraft: [
-                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Деревенский житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Эндер Дракон",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Фантом",id:"Phantom"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:" Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Эллей",id:"Allay"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"},{n:"Вызыватель",id:"Evoker"},{n:"Поборник",id:"Vindicator"}
+                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Дракон Края",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:" Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"}
+            ],
+            clash: [
+                {n:"Рыцарь", id:"knight"}, {n:"Лучницы", id:"archers"}, {n:"Гоблины", id:"goblins"}, {n:"Гигант", id:"giant"}, {n:"П.Е.К.К.А", id:"pekka"}, {n:"Миньоны", id:"minions"}, {n:"Воздушный шар", id:"balloon"}, {n:"Ведьма", id:"witch"}, {n:"Варвары", id:"barbarians"}, {n:"Голем", id:"golem"}, {n:"Скелеты", id:"skeletons"}, {n:"Валькирия", id:"valkyrie"}, {n:"Армия скелетов", id:"skeleton-army"}, {n:"Бомбер", id:"bomber"}, {n:"Мушкетер", id:"musketeer"}, {n:"Малыш дракон", id:"baby-dragon"}, {n:"Принц", id:"prince"}, {n:"Всадник на кабане", id:"hog-rider"}, {n:"Адская башня", id:"inferno-tower"}, {n:"Тесла", id:"tesla"}, {n:"Арбалет", id:"x-bow"}, {n:"Темный принц", id:"dark-prince"}, {n:"Ледяной колдун", id:"ice-wizard"}, {n:"Принцесса", id:"princess"}, {n:"Шахтер", id:"miner"}, {n:"Спарки", id:"sparky"}, {n:"Адская гончая", id:"lava-hound"}, {n:"Дровосек", id:"lumberjack"}, {n:"Бревно", id:"the-log"}, {n:"Вышибала", id:"bowler"}, {n:"Электроколдун", id:"electro-wizard"}, {n:"Палач", id:"executioner"}, {n:"Ночная ведьма", id:"night-witch"}, {n:"Мегарыцарь", id:"mega-knight"}, {n:"Магический лучник", id:"magic-archer"}, {n:"Целительница", id:"battle-healer"}, {n:"Петарда", id:"firecracker"}, {n:"Бандитка", id:"bandit"}
+            ],
+            genshin: [
+                {n:"Итэр", id:"aether"}, {n:"Люмин", id:"lumine"}, {n:"Джинн", id:"jean"}, {n:"Эмбер", id:"amber"}, {n:"Кэйа", id:"kaeya"}, {n:"Лиза", id:"lisa"}, {n:"Барбара", id:"barbara"}, {n:"Рэйзор", id:"razor"}, {n:"Венти", id:"venti"}, {n:"Кли", id:"klee"}, {n:"Беннет", id:"bennett"}, {n:"Ноэлль", id:"noelle"}, {n:"Фишль", id:"fischl"}, {n:"Сахароза", id:"sucrose"}, {n:"Мона", id:"mona"}, {n:"Дилюк", id:"diluc"}, {n:"Сян Лин", id:"xiangling"}, {n:"Син Цю", id:"xingqiu"}, {n:"Бэй Доу", id:"beidou"}, {n:"Нин Гуан", id:"ningguang"}, {n:"Чун Юнь", id:"chongyun"}, {n:"Ци Ци", id:"qiqi"}, {n:"Кэ Цин", id:"keqing"}, {n:"Тарталья", id:"tartaglia"}, {n:"Диона", id:"diona"}, {n:"Чжун Ли", id:"zhongli"}, {n:"Альбедо", id:"albedo"}, {n:"Гань Юй", id:"ganyu"}, {n:"Сяо", id:"xiao"}, {n:"Ху Тао", id:"hu-tao"}, {n:"Розария", id:"rosaria"}, {n:"Янь Фэй", id:"yanfei"}, {n:"Эола", id:"eula"}, {n:"Кадзуха", id:"kazuha"}, {n:"Аяка", id:"ayaka"}, {n:"Ёимия", id:"yoimiya"}, {n:"Райдэн", id:"raiden"}, {n:"Кокоми", id:"kokomi"}, {n:"Тома", id:"thoma"}, {n:"Итто", id:"itto"}, {n:"Горо", id:"gorou"}, {n:"Шэнь Хэ", id:"shenhe"}, {n:"Яэ Мико", id:"yae-miko"}, {n:"Аято", id:"ayato"}, {n:"Е Лань", id:"yelan"}, {n:"Куки Синобу", id:"kuki-shinobu"}, {n:"Хэйдзо", id:"heizou"}, {n:"Тигнари", id:"tighnari"}, {n:"Коллеи", id:"collei"}, {n:"Сайно", id:"cyno"}, {n:"Нилу", id:"nilou"}, {n:"Нахида", id:"nahida"}, {n:"Лайла", id:"layla"}, {n:"Странник", id:"wanderer"}, {n:"Фарузан", id:"faruzan"}, {n:"Аль-Хайтам", id:"alhaitham"}, {n:"Яо Яо", id:"yaoyao"}, {n:"Дэхья", id:"dehya"}, {n:"Бай Чжу", id:"baizhu"}, {n:"Кавех", id:"kaveh"}, {n:"Лини", id:"lyney"}, {n:"Линетт", id:"lynette"}, {n:"Фремине", id:"freminet"}, {n:"Нёвиллет", id:"neuvillette"}, {n:"Ризли", id:"wriothesley"}, {n:"Фурина", id:"furina"}, {n:"Навия", id:"navia"}, {n:"Шеврёз", id:"chevreuse"}, {n:"Сянь Юнь", id:"xianyun"}, {n:"Ка Мин", id:"gaming"}, {n:"Тиори", id:"chiori"}, {n:"Арлекино", id:"arlecchino"}
             ]
         };
 
@@ -242,31 +294,55 @@
         let currentIndex = 0; 
         let spyMode = 'one';
         let currentCategory = 'brawl';
+        let actualCategory = 'brawl'; 
         const spyIcon = "https://cdn.brawlify.com/profile/28000000.png";
         
         let apiBrawlersData = [];
 
-        // В фоне загружаем базу с официальными ID сразу при открытии сайта
         fetch('https://api.brawlapi.com/v1/brawlers')
             .then(res => res.json())
             .then(json => { apiBrawlersData = json.list || []; })
             .catch(err => console.error("Ошибка загрузки BrawlAPI:", err));
 
+        function resetTheme() {
+            document.body.classList.remove('theme-random');
+            let root = document.documentElement;
+            root.style.setProperty('--accent', '#38bdf8');
+            root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)');
+            root.style.setProperty('--btn-text-color', '#0f172a');
+        }
+
         function showCategories() { 
+            resetTheme(); 
             document.getElementById('main-menu').classList.add('hidden'); 
             document.getElementById('category-menu').classList.remove('hidden'); 
         }
         function goBackToMain() { 
+            resetTheme();
             document.getElementById('category-menu').classList.add('hidden'); 
             document.getElementById('main-menu').classList.remove('hidden'); 
         }
         function showSetup(cat) { 
             currentCategory = cat;
             let root = document.documentElement;
-            if(cat === 'minecraft') {
+            document.body.classList.remove('theme-random');
+            root.style.setProperty('--btn-text-color', '#0f172a');
+            
+            if (cat === 'minecraft') {
                 root.style.setProperty('--accent', '#4ade80');
                 root.style.setProperty('--shadow-color', 'rgba(74, 222, 128, 0.4)');
                 document.getElementById('setupTitle').innerText = 'Minecraft';
+            } else if (cat === 'clash') {
+                root.style.setProperty('--accent', '#fbbf24');
+                root.style.setProperty('--shadow-color', 'rgba(251, 191, 36, 0.4)');
+                document.getElementById('setupTitle').innerText = 'Clash Royale';
+            } else if (cat === 'genshin') {
+                root.style.setProperty('--accent', '#f8fafc');
+                root.style.setProperty('--shadow-color', 'rgba(248, 250, 252, 0.3)');
+                document.getElementById('setupTitle').innerText = 'Genshin Impact';
+            } else if (cat === 'random') {
+                document.body.classList.add('theme-random');
+                document.getElementById('setupTitle').innerText = 'Рандом';
             } else {
                 root.style.setProperty('--accent', '#38bdf8');
                 root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)');
@@ -277,6 +353,7 @@
             document.getElementById('setup').classList.remove('hidden'); 
         }
         function goBackToCategories() { 
+            resetTheme();
             document.getElementById('setup').classList.add('hidden'); 
             document.getElementById('category-menu').classList.remove('hidden'); 
         }
@@ -292,14 +369,19 @@
             count = Math.min(Math.max(count, 2), 100);
             roles = []; currentIndex = 0;
 
-            let list = data[currentCategory];
+            actualCategory = currentCategory;
+            if (currentCategory === 'random') {
+                const cats = ['brawl', 'minecraft', 'clash', 'genshin'];
+                actualCategory = cats[Math.floor(Math.random() * cats.length)];
+            }
+
+            let list = data[actualCategory];
             let pick = list[Math.floor(Math.random() * list.length)];
             
             let initialImg = "";
             let brawlerNumId = null;
 
-            if (currentCategory === 'brawl') {
-                // Ищем бойца в загруженной базе по форматированному имени
+            if (actualCategory === 'brawl') {
                 let apiMatch = apiBrawlersData.find(b => 
                     b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, '')
                 );
@@ -307,6 +389,11 @@
                     brawlerNumId = apiMatch.id;
                     initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`;
                 }
+            } else if (actualCategory === 'clash') {
+                initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
+            } else if (actualCategory === 'genshin') {
+                // Используем портреты в полный рост
+                initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
             } else {
                 initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
             }
@@ -317,7 +404,7 @@
                     id: pick.id, 
                     img: initialImg, 
                     numId: brawlerNumId, 
-                    cat: currentCategory 
+                    cat: actualCategory 
                 });
             }
 
@@ -326,7 +413,7 @@
             while(placed < spies) {
                 let rIdx = Math.floor(Math.random() * count);
                 if(roles[rIdx].n !== "ШПИОН") { 
-                    roles[rIdx] = { n: "ШПИОН", id: "spy", img: spyIcon, cat: currentCategory }; 
+                    roles[rIdx] = { n: "ШПИОН", id: "spy", img: spyIcon, cat: actualCategory }; 
                     placed++; 
                 }
             }
@@ -349,12 +436,17 @@
             img.onerror = null; 
             img.src = ''; 
             
-            // Функция для красивой генерации 2 букв, если картинки всё-таки нет нигде
             function setFallback() {
                 img.onerror = null;
                 let fallbackName = (r.n === "ШПИОН") ? "?" : r.n; 
-                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : "38bdf8");
-                img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=${bg}&color=0f172a&size=200&font-size=0.4`;
+                let bg = (r.n === "ШПИОН") ? "ef4444" : 
+                         (r.cat === 'minecraft' ? "4ade80" : 
+                         (r.cat === 'clash' ? "fbbf24" : 
+                         (r.cat === 'genshin' ? "f8fafc" : "38bdf8")));
+                let color = (r.cat === 'genshin' && r.n !== "ШПИОН") ? "0f172a" : "ffffff";
+                if (r.n !== "ШПИОН" && r.cat !== 'genshin') color = "0f172a";
+                
+                img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=${bg}&color=${color}&size=200&font-size=0.4`;
             }
 
             img.onerror = function() {
@@ -366,21 +458,25 @@
                     else if (step === 1) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE1_BE1.png`;
                     else if (step === 2) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE3.png`;
                     else setFallback();
+                } else if (r.cat === 'clash' && r.id !== 'spy') {
+                    if (step === 0) this.src = `https://cdn.royaleapi.com/static/img/cards/${r.id}.png`;
+                    else setFallback();
+                } else if (r.cat === 'genshin' && r.id !== 'spy') {
+                    // Если портрет в полный рост не загрузился, пробуем гача-сплеш или иконку
+                    if (step === 0) this.src = `https://genshin.jmp.blue/characters/${r.id}/gacha-splash`;
+                    else if (step === 1) this.src = `https://genshin.jmp.blue/characters/${r.id}/icon-big`;
+                    else setFallback();
                 } else if (r.cat === 'brawl' && r.id !== 'spy') {
                     if (r.numId) {
-                        // Каскадный фоллбэк: Если нет 3D рендера -> портрет без фона -> стандартный портрет -> буквы
                         if (step === 0) this.src = `https://cdn.brawlify.com/brawlers/borderless/${r.numId}.png`;
                         else if (step === 1) this.src = `https://cdn.brawlify.com/brawler/${r.numId}.png`;
                         else setFallback();
-                    } else {
-                        setFallback();
-                    }
+                    } else setFallback();
                 } else {
                     setFallback();
                 }
             };
 
-            // Если стартовый URL был собран - пробуем его, иначе сразу fallback
             if(r.img) {
                 img.src = r.img;
             } else {
@@ -395,6 +491,7 @@
             currentIndex++;
             if(currentIndex >= roles.length) {
                 document.getElementById('game').classList.add('hidden');
+                resetTheme();
                 document.getElementById('main-menu').classList.remove('hidden');
                 let n = document.getElementById('notification');
                 n.classList.add('show');
