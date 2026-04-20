@@ -16,6 +16,11 @@
             --btn-inactive: #334155; 
             --card-border: 1px solid rgba(255,255,255,0.1);
         }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body { 
             background: var(--bg);
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg) 70%);
@@ -52,11 +57,18 @@
         button.main-btn { 
             background: var(--accent); 
             color: var(--btn-text-color); 
-            padding: 16px 32px; 
+            padding: 10px 20px; 
             font-size: 16px; 
             font-weight: 800; 
             border-radius: 16px; 
             width: 100%; 
+            min-height: 54px; /* Фиксируем высоту, чтобы избежать дерганья экрана */
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
             transition: all 0.3s ease; 
             box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px var(--shadow-color); 
             position: relative;
@@ -72,18 +84,25 @@
         }
 
         button.main-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            transition: 0.5s;
+            transform: skewX(-25deg); transition: 0.5s;
         }
         
-        button.main-btn:active { 
+        button.main-btn:active:not(:disabled) { 
             transform: translateY(4px) scale(0.98); 
             box-shadow: 0 0px 0 rgba(0,0,0,0.3), 0 5px 10px rgba(0,0,0,0.2); 
         }
+
+        button.main-btn:disabled {
+            background: var(--btn-inactive) !important;
+            color: var(--secondary) !important;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.2) !important;
+            cursor: not-allowed;
+            transform: none !important;
+            border-color: transparent !important;
+        }
+        button.main-btn:disabled::after { display: none; }
 
         .btn-brawl { background: #38bdf8 !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(56, 189, 248, 0.3) !important;}
         .btn-mc { background: #4ade80 !important; color: #064e3b !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(74, 222, 128, 0.3) !important;}
@@ -91,88 +110,65 @@
         .btn-genshin { background: #f8fafc !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(248, 250, 252, 0.3) !important;}
         .btn-random { 
             background: linear-gradient(90deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; 
-            background-size: 300% 100% !important;
-            animation: gradientPan 4s linear infinite !important;
-            color: white !important; 
-            box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192, 132, 252, 0.4) !important;
+            background-size: 300% 100% !important; animation: gradientPan 4s linear infinite !important;
+            color: white !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192, 132, 252, 0.4) !important;
         }
 
         h1 { 
-            font-weight: 800; 
-            color: var(--accent); 
-            margin-top: 0; 
-            margin-bottom: 20px; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-            text-shadow: 0 0 15px var(--shadow-color);
+            font-weight: 800; color: var(--accent); margin-top: 0; margin-bottom: 20px; 
+            text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px var(--shadow-color);
             transition: color 0.5s, text-shadow 0.5s;
         }
         
-        h2 { 
-            font-size: 28px; 
-            margin: 10px 0; 
-            color: var(--accent); 
-            text-shadow: 0 0 15px var(--shadow-color); 
-            transition: color 0.5s, text-shadow 0.5s;
-        }
+        h2 { font-size: 28px; margin: 10px 0; color: var(--accent); text-shadow: 0 0 15px var(--shadow-color); transition: color 0.5s, text-shadow 0.5s; }
 
         .card { 
-            background: var(--card-bg); 
-            border-radius: 28px; 
-            padding: 25px; 
+            background: var(--card-bg); border-radius: 28px; padding: 25px; 
             box-shadow: 0 20px 30px -5px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.02); 
-            border: var(--card-border); 
-            margin-bottom: 20px; 
-            width: 100%; 
-            box-sizing: border-box; 
-            transition: border-color 0.5s;
+            border: var(--card-border); margin-bottom: 20px; width: 100%; box-sizing: border-box; transition: border-color 0.5s;
         }
         
         .dashed-card { 
-            border: 2px dashed var(--secondary); 
-            background: rgba(148, 163, 184, 0.05); 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border-radius: 16px; 
-            animation: pulseDash 2s infinite alternate;
-            transition: border-color 0.5s;
+            border: 2px dashed var(--secondary); background: rgba(148, 163, 184, 0.05); padding: 20px; margin-bottom: 20px; 
+            border-radius: 16px; animation: pulseDash 2s infinite alternate; transition: border-color 0.5s;
         }
 
-        input { 
+        input[type="number"], input[type="text"], select { 
             background: var(--bg); border: 1px solid var(--secondary); color: white; 
-            padding: 12px; border-radius: 12px; width: 80px; text-align: center; font-size: 20px; outline: none;
+            padding: 12px; border-radius: 12px; outline: none; font-size: 16px;
         }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--shadow-color); }
+        input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--shadow-color); }
 
         .mode-selector { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
         .mode-btn { background: var(--btn-inactive); color: var(--secondary); padding: 12px; border-radius: 12px; flex: 1; font-weight: 600; transition: all 0.3s; }
         .mode-btn.active { background: var(--accent); color: var(--btn-text-color); transform: scale(1.05); box-shadow: 0 5px 15px var(--shadow-color); }
 
+        .cat-toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; }
+        .cat-toggle { background: var(--btn-inactive); color: var(--secondary); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; user-select: none; border: 1px solid transparent; }
+        .cat-toggle.active { background: var(--accent); color: var(--btn-text-color); box-shadow: 0 2px 8px var(--shadow-color); border-color: var(--accent); }
+
         .role-img-container { 
-            width: 180px; height: 180px; margin: 15px auto; 
-            position: relative; display: flex; align-items: center; justify-content: center; 
-            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)); 
-            border-radius: 24px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            width: 180px; height: 180px; margin: 15px auto; position: relative; display: flex; align-items: center; justify-content: center; 
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)); border-radius: 24px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
-        
-        .role-img { 
-            width: 100%; height: 100%; object-fit: contain; 
-            animation: breathing 3s ease-in-out infinite;
-        }
+        .role-img { width: 100%; height: 100%; object-fit: contain; animation: breathing 3s ease-in-out infinite; }
 
         .hidden { display: none !important; }
-        .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); }
+        .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); z-index: 999; padding: 10px; cursor: default;}
+
+        .admin-row { display: flex; flex-direction: column; text-align: left; margin-bottom: 15px; }
+        .admin-row label { font-size: 12px; color: var(--secondary); margin-bottom: 5px; }
+        .admin-row input, .admin-row select { width: 100%; box-sizing: border-box; }
+        #adminLastGameRoles {
+            font-size: 14px; color: var(--text); max-height: 120px; overflow-y: auto;
+            background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;
+            margin-top: 5px; text-align: left; line-height: 1.5;
+        }
 
         @keyframes bgShift { 0% { background-position: 50% 0%; } 100% { background-position: 50% 100%; } }
         @keyframes gradientPan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
         @keyframes fadeScreenIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        
-        @keyframes breathing { 
-            0% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } 
-            50% { transform: scale(1.08); filter: drop-shadow(0 15px 25px var(--shadow-color)); } 
-            100% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } 
-        }
-        
+        @keyframes breathing { 0% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } 50% { transform: scale(1.08); filter: drop-shadow(0 15px 25px var(--shadow-color)); } 100% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } }
         @keyframes popInCard { 0% { transform: scale(0.8) rotate(-5deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
         @keyframes pulseDash { 0% { border-color: rgba(148, 163, 184, 0.3); } 100% { border-color: rgba(148, 163, 184, 0.7); } }
         #roleCard:not(.hidden) { animation: popInCard 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.2) forwards; }
@@ -184,33 +180,15 @@
         }
         #notification.show { top: 40px; }
 
-        /* Специальные стили для рандомной темы */
-        body.theme-random {
-            animation: randomThemeColors 8s linear infinite !important;
-        }
-        body.theme-random .main-btn:not(.secondary-btn) {
-            background: transparent !important;
-            color: white !important;
-            border: 2px solid white;
-            animation: randomThemeBtn 8s linear infinite !important;
-        }
-        body.theme-random .mode-btn.active {
-            color: white !important;
-            animation: randomThemeBtn 8s linear infinite !important;
-        }
+        body.theme-random { animation: randomThemeColors 8s linear infinite !important; }
+        body.theme-random .main-btn:not(.secondary-btn):not(:disabled) { background: transparent !important; color: white !important; border: 2px solid white; animation: randomThemeBtn 8s linear infinite !important; }
+        body.theme-random .mode-btn.active { color: white !important; animation: randomThemeBtn 8s linear infinite !important; }
+        body.theme-random .cat-toggle.active { color: white !important; animation: randomThemeBtn 8s linear infinite !important; }
+        
+        body.theme-random .main-btn:disabled { animation: none !important; }
 
-        @keyframes randomThemeColors {
-            0% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; }
-            33% { --accent: #c084fc; --shadow-color: rgba(192,132,252,0.5); --btn-text-color: white; }
-            66% { --accent: #818cf8; --shadow-color: rgba(129,140,248,0.5); --btn-text-color: white; }
-            100% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; }
-        }
-        @keyframes randomThemeBtn {
-            0% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;}
-            33% { background: #c084fc; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192,132,252,0.4); border-color:#c084fc;}
-            66% { background: #818cf8; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(129,140,248,0.4); border-color:#818cf8;}
-            100% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;}
-        }
+        @keyframes randomThemeColors { 0% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; } 33% { --accent: #c084fc; --shadow-color: rgba(192,132,252,0.5); --btn-text-color: white; } 66% { --accent: #818cf8; --shadow-color: rgba(129,140,248,0.5); --btn-text-color: white; } 100% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; } }
+        @keyframes randomThemeBtn { 0% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;} 33% { background: #c084fc; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192,132,252,0.4); border-color:#c084fc;} 66% { background: #818cf8; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(129,140,248,0.4); border-color:#818cf8;} 100% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;} }
     </style>
 </head>
 <body>
@@ -220,9 +198,7 @@
     <div class="container" id="main-menu">
         <h1>Xleb Games</h1>
         <button class="main-btn btn-brawl" onclick="showCategories()">ИГРАТЬ В ШПИОНА</button>
-        <p style="font-size: 12px; color: var(--secondary); margin-top: 25px;">
-            Подпишись на <a href="https://t.me/xlebusek_v_gd" target="_blank" style="color:var(--accent)">телеграмм канал</a>
-        </p>
+        <p style="font-size: 12px; color: var(--secondary); margin-top: 25px;">Подпишись на <a href="https://t.me/xlebusek_v_gd" target="_blank" style="color:var(--accent)">телеграмм канал</a></p>
     </div>
 
     <div class="container hidden" id="category-menu">
@@ -241,190 +217,282 @@
         <h1 id="setupTitle">Настройка</h1>
         <div class="card">
             <p style="color: var(--secondary); font-size: 14px; margin-top: 0;">Количество игроков?</p>
-            <input type="number" id="playerCount" value="3" min="2" max="100">
+            <input type="number" id="playerCount" value="3" min="2" max="100" style="width: 80px; text-align: center;">
             
             <p style="color: var(--secondary); font-size: 14px; margin-top: 25px; margin-bottom: 5px;">Шпионы:</p>
             <div class="mode-selector">
                 <button id="btn1" class="mode-btn active" onclick="setMode('one')">1 Шпион</button>
                 <button id="btnRnd" class="mode-btn" onclick="setMode('random')">Рандом</button>
             </div>
+
+            <div id="randomSettings" class="hidden" style="margin-top: 25px;">
+                <p style="color: var(--secondary); font-size: 14px; margin-bottom: 5px;">Участвуют в рандоме:</p>
+                <div class="cat-toggles" id="randCats">
+                    <div class="cat-toggle active" data-val="brawl" onclick="toggleRandomCat(this)">Brawl Stars</div>
+                    <div class="cat-toggle active" data-val="minecraft" onclick="toggleRandomCat(this)">Minecraft</div>
+                    <div class="cat-toggle active" data-val="clash" onclick="toggleRandomCat(this)">Clash Royale</div>
+                    <div class="cat-toggle active" data-val="genshin" onclick="toggleRandomCat(this)">Genshin Impact</div>
+                </div>
+            </div>
         </div>
-        <button class="main-btn" onclick="startGame()">НАЧАТЬ</button>
+        <button id="startGameBtn" class="main-btn" onclick="startGame()">НАЧАТЬ</button>
         <button class="main-btn secondary-btn" onclick="goBackToCategories()">НАЗАД</button>
+    </div>
+
+    <div class="container hidden" id="admin-menu">
+        <h1 style="color: #ef4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);">Admin Panel</h1>
+        <div class="card" style="padding: 20px;">
+            <div class="admin-row">
+                <label>Категория</label>
+                <select id="adminCat" onchange="updateAdminCharList()">
+                    <option value="brawl">Brawl Stars</option>
+                    <option value="minecraft">Minecraft</option>
+                    <option value="clash">Clash Royale</option>
+                    <option value="genshin">Genshin Impact</option>
+                </select>
+            </div>
+            <div class="admin-row">
+                <label>Персонаж для мирных</label>
+                <select id="adminChar"></select>
+            </div>
+            <div class="admin-row">
+                <label>Всего игроков</label>
+                <input type="number" id="adminPlayerCount" value="4" min="2">
+            </div>
+            <div class="admin-row">
+                <label>Номера шпионов (через запятую, напр. 1, 3)</label>
+                <input type="text" id="adminSpies" placeholder="Например: 2, 4">
+            </div>
+            <div class="admin-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <label style="color: #ef4444; font-weight: bold;">Роли прошлой игры:</label>
+                <div id="adminLastGameRoles">Игр еще не было</div>
+            </div>
+        </div>
+        <button class="main-btn" style="background: #ef4444; color: white;" onclick="startAdminGame()">ИГРАТЬ</button>
+        <button class="main-btn secondary-btn" onclick="closeAdminMenu()">ЗАКРЫТЬ</button>
     </div>
 
     <div class="container hidden" id="game">
         <div id="roleCard" class="card hidden">
             <p style="color: var(--secondary); font-size: 14px; margin: 0;">Твоя роль:</p>
             <h2 id="roleText"></h2>
-            <div class="role-img-container">
-                <img id="roleImg" class="role-img" src="">
-            </div>
+            <div class="role-img-container"><img id="roleImg" class="role-img" src=""></div>
             <button class="main-btn secondary-btn" onclick="nextPlayer()">СКРЫТЬ</button>
         </div>
         
         <div id="tapArea">
-            <div class="dashed-card">
-                <p id="playerInstruction" style="margin: 0; font-size: 18px; font-weight: 600;"></p>
-            </div>
+            <div class="dashed-card"><p id="playerInstruction" style="margin: 0; font-size: 18px; font-weight: 600;"></p></div>
             <button class="main-btn" onclick="showRole()">ПОКАЗАТЬ РОЛЬ</button>
         </div>
         <p id="playerStatus" style="color: var(--secondary); margin-top: 20px; font-weight: 600; letter-spacing: 1px;"></p>
     </div>
 
-    <div class="version-tag">Версия 3.0</div>
+    <div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 3.1</div>
 
     <script>
         const data = {
             brawl: [
-                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Мико",id:"mico"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Честер",id:"chester"},{n:"Чак",id:"chuck"},{n:"Сту",id:"stu"}
+                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Мико",id:"mico"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Честер",id:"chester"},{n:"Чак",id:"chuck"},{n:"Сту",id:"stu"},{n:"Шейд",id:"shade"},{n:"Люми",id:"lumi"},{n:"Финкс",id:"finx"},{n:"Олли",id:"ollie"},{n:"Наджия",id:"nadja"}
             ],
             minecraft: [
-                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Дракон Края",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:" Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"}
+                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Дракон Края",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:" Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"},{n:"Скрипун",id:"Creaking"},{n:"Боггед",id:"Bogged"},{n:"Серный куб",id:"sulfur_cube"}
             ],
             clash: [
-                {n:"Рыцарь", id:"knight"}, {n:"Лучницы", id:"archers"}, {n:"Гоблины", id:"goblins"}, {n:"Гигант", id:"giant"}, {n:"П.Е.К.К.А", id:"pekka"}, {n:"Миньоны", id:"minions"}, {n:"Воздушный шар", id:"balloon"}, {n:"Ведьма", id:"witch"}, {n:"Варвары", id:"barbarians"}, {n:"Голем", id:"golem"}, {n:"Скелеты", id:"skeletons"}, {n:"Валькирия", id:"valkyrie"}, {n:"Армия скелетов", id:"skeleton-army"}, {n:"Бомбер", id:"bomber"}, {n:"Мушкетер", id:"musketeer"}, {n:"Малыш дракон", id:"baby-dragon"}, {n:"Принц", id:"prince"}, {n:"Всадник на кабане", id:"hog-rider"}, {n:"Адская башня", id:"inferno-tower"}, {n:"Тесла", id:"tesla"}, {n:"Арбалет", id:"x-bow"}, {n:"Темный принц", id:"dark-prince"}, {n:"Ледяной колдун", id:"ice-wizard"}, {n:"Принцесса", id:"princess"}, {n:"Шахтер", id:"miner"}, {n:"Спарки", id:"sparky"}, {n:"Адская гончая", id:"lava-hound"}, {n:"Дровосек", id:"lumberjack"}, {n:"Бревно", id:"the-log"}, {n:"Вышибала", id:"bowler"}, {n:"Электроколдун", id:"electro-wizard"}, {n:"Палач", id:"executioner"}, {n:"Ночная ведьма", id:"night-witch"}, {n:"Мегарыцарь", id:"mega-knight"}, {n:"Магический лучник", id:"magic-archer"}, {n:"Целительница", id:"battle-healer"}, {n:"Петарда", id:"firecracker"}, {n:"Бандитка", id:"bandit"}
+                {n:"Рыцарь", id:"knight"}, {n:"Лучницы", id:"archers"}, {n:"Гоблины", id:"goblins"}, {n:"Гигант", id:"giant"}, {n:"П.Е.К.К.А", id:"pekka"}, {n:"Миньоны", id:"minions"}, {n:"Воздушный шар", id:"balloon"}, {n:"Ведьма", id:"witch"}, {n:"Варвары", id:"barbarians"}, {n:"Голем", id:"golem"}, {n:"Скелеты", id:"skeletons"}, {n:"Валькирия", id:"valkyrie"}, {n:"Армия скелетов", id:"skeleton-army"}, {n:"Бомбер", id:"bomber"}, {n:"Мушкетер", id:"musketeer"}, {n:"Малыш дракон", id:"baby-dragon"}, {n:"Принц", id:"prince"}, {n:"Всадник на кабане", id:"hog-rider"}, {n:"Адская башня", id:"inferno-tower"}, {n:"Тесла", id:"tesla"}, {n:"Арбалет", id:"x-bow"}, {n:"Темный принц", id:"dark-prince"}, {n:"Ледяной колдун", id:"ice-wizard"}, {n:"Принцесса", id:"princess"}, {n:"Шахтер", id:"miner"}, {n:"Спарки", id:"sparky"}, {n:"Адская гончая", id:"lava-hound"}, {n:"Дровосек", id:"lumberjack"}, {n:"Бревно", id:"the-log"}, {n:"Вышибала", id:"bowler"}, {n:"Электроколдун", id:"electro-wizard"}, {n:"Палач", id:"executioner"}, {n:"Ночная ведьма", id:"night-witch"}, {n:"Мегарыцарь", id:"mega-knight"}, {n:"Магический лучник", id:"magic-archer"}, {n:"Целительница", id:"battle-healer"}, {n:"Петарда", id:"firecracker"}, {n:"Бандитка", id:"bandit"}, {n:"Маленький принц", id:"little-prince"}, {n:"Гоблин-подрывник", id:"goblin-demolisher"}, {n:"Гоблинская машина", id:"goblin-machine"}, {n:"Подозрительный куст", id:"suspicious-bush"}, {n:"Канонир", id:"cannoneer"}, {n:"Герцогиня", id:"dagger-duchess"}
             ],
             genshin: [
-                {n:"Итэр", id:"aether"}, {n:"Люмин", id:"lumine"}, {n:"Джинн", id:"jean"}, {n:"Эмбер", id:"amber"}, {n:"Кэйа", id:"kaeya"}, {n:"Лиза", id:"lisa"}, {n:"Барбара", id:"barbara"}, {n:"Рэйзор", id:"razor"}, {n:"Венти", id:"venti"}, {n:"Кли", id:"klee"}, {n:"Беннет", id:"bennett"}, {n:"Ноэлль", id:"noelle"}, {n:"Фишль", id:"fischl"}, {n:"Сахароза", id:"sucrose"}, {n:"Мона", id:"mona"}, {n:"Дилюк", id:"diluc"}, {n:"Сян Лин", id:"xiangling"}, {n:"Син Цю", id:"xingqiu"}, {n:"Бэй Доу", id:"beidou"}, {n:"Нин Гуан", id:"ningguang"}, {n:"Чун Юнь", id:"chongyun"}, {n:"Ци Ци", id:"qiqi"}, {n:"Кэ Цин", id:"keqing"}, {n:"Тарталья", id:"tartaglia"}, {n:"Диона", id:"diona"}, {n:"Чжун Ли", id:"zhongli"}, {n:"Альбедо", id:"albedo"}, {n:"Гань Юй", id:"ganyu"}, {n:"Сяо", id:"xiao"}, {n:"Ху Тао", id:"hu-tao"}, {n:"Розария", id:"rosaria"}, {n:"Янь Фэй", id:"yanfei"}, {n:"Эола", id:"eula"}, {n:"Кадзуха", id:"kazuha"}, {n:"Аяка", id:"ayaka"}, {n:"Ёимия", id:"yoimiya"}, {n:"Райдэн", id:"raiden"}, {n:"Кокоми", id:"kokomi"}, {n:"Тома", id:"thoma"}, {n:"Итто", id:"itto"}, {n:"Горо", id:"gorou"}, {n:"Шэнь Хэ", id:"shenhe"}, {n:"Яэ Мико", id:"yae-miko"}, {n:"Аято", id:"ayato"}, {n:"Е Лань", id:"yelan"}, {n:"Куки Синобу", id:"kuki-shinobu"}, {n:"Хэйдзо", id:"heizou"}, {n:"Тигнари", id:"tighnari"}, {n:"Коллеи", id:"collei"}, {n:"Сайно", id:"cyno"}, {n:"Нилу", id:"nilou"}, {n:"Нахида", id:"nahida"}, {n:"Лайла", id:"layla"}, {n:"Странник", id:"wanderer"}, {n:"Фарузан", id:"faruzan"}, {n:"Аль-Хайтам", id:"alhaitham"}, {n:"Яо Яо", id:"yaoyao"}, {n:"Дэхья", id:"dehya"}, {n:"Бай Чжу", id:"baizhu"}, {n:"Кавех", id:"kaveh"}, {n:"Лини", id:"lyney"}, {n:"Линетт", id:"lynette"}, {n:"Фремине", id:"freminet"}, {n:"Нёвиллет", id:"neuvillette"}, {n:"Ризли", id:"wriothesley"}, {n:"Фурина", id:"furina"}, {n:"Навия", id:"navia"}, {n:"Шеврёз", id:"chevreuse"}, {n:"Сянь Юнь", id:"xianyun"}, {n:"Ка Мин", id:"gaming"}, {n:"Тиори", id:"chiori"}, {n:"Арлекино", id:"arlecchino"}
+                {n:"Итэр", id:"aether"}, {n:"Люмин", id:"lumine"}, {n:"Джинн", id:"jean"}, {n:"Эмбер", id:"amber"}, {n:"Кэйа", id:"kaeya"}, {n:"Лиза", id:"lisa"}, {n:"Барбара", id:"barbara"}, {n:"Рэйзор", id:"razor"}, {n:"Венти", id:"venti"}, {n:"Кли", id:"klee"}, {n:"Беннет", id:"bennett"}, {n:"Ноэлль", id:"noelle"}, {n:"Фишль", id:"fischl"}, {n:"Сахароза", id:"sucrose"}, {n:"Мона", id:"mona"}, {n:"Дилюк", id:"diluc"}, {n:"Сян Лин", id:"xiangling"}, {n:"Син Цю", id:"xingqiu"}, {n:"Бэй Доу", id:"beidou"}, {n:"Нин Гуан", id:"ningguang"}, {n:"Чун Юнь", id:"chongyun"}, {n:"Ци Ци", id:"qiqi"}, {n:"Кэ Цин", id:"keqing"}, {n:"Тарталья", id:"tartaglia"}, {n:"Диона", id:"diona"}, {n:"Чжун Ли", id:"zhongli"}, {n:"Альбедо", id:"albedo"}, {n:"Гань Юй", id:"ganyu"}, {n:"Сяо", id:"xiao"}, {n:"Ху Тао", id:"hu-tao"}, {n:"Розария", id:"rosaria"}, {n:"Янь Фэй", id:"yanfei"}, {n:"Эола", id:"eula"}, {n:"Кадзуха", id:"kazuha"}, {n:"Аяка", id:"ayaka"}, {n:"Ёимия", id:"yoimiya"}, {n:"Райдэн", id:"raiden"}, {n:"Кокоми", id:"kokomi"}, {n:"Тома", id:"thoma"}, {n:"Итто", id:"itto"}, {n:"Горо", id:"gorou"}, {n:"Шэнь Хэ", id:"shenhe"}, {n:"Яэ Мико", id:"yae-miko"}, {n:"Аято", id:"ayato"}, {n:"Е Лань", id:"yelan"}, {n:"Куки Синобу", id:"kuki-shinobu"}, {n:"Хэйдзо", id:"heizou"}, {n:"Тигнари", id:"tighnari"}, {n:"Коллеи", id:"collei"}, {n:"Сайно", id:"cyno"}, {n:"Нилу", id:"nilou"}, {n:"Нахида", id:"nahida"}, {n:"Лайла", id:"layla"}, {n:"Странник", id:"wanderer"}, {n:"Фарузан", id:"faruzan"}, {n:"Аль-Хайтам", id:"alhaitham"}, {n:"Яо Яо", id:"yaoyao"}, {n:"Дэхья", id:"dehya"}, {n:"Бай Чжу", id:"baizhu"}, {n:"Кавех", id:"kaveh"}, {n:"Лини", id:"lyney"}, {n:"Линетт", id:"lynette"}, {n:"Фремине", id:"freminet"}, {n:"Нёвиллет", id:"neuvillette"}, {n:"Ризли", id:"wriothesley"}, {n:"Фурина", id:"furina"}, {n:"Навия", id:"navia"}, {n:"Шеврёз", id:"chevreuse"}, {n:"Сянь Юнь", id:"xianyun"}, {n:"Ка Мин", id:"gaming"}, {n:"Тиори", id:"chiori"}, {n:"Арлекино", id:"arlecchino"}, {n:"Муалани", id:"mualani"}, {n:"Кинич", id:"kinich"}, {n:"Качина", id:"kachina"}, {n:"Шилонен", id:"xilonen"}, {n:"Часка", id:"chasca"}, {n:"Оророн", id:"ororon"}, {n:"Мавуика", id:"mavuika"}, {n:"Ситлали", id:"citlali"}, {n:"Лань Янь", id:"lanyan"}, {n:"Прюн", id:"prume"}
             ]
         };
 
         let roles = []; 
+        let lastGameRoles = [];
         let currentIndex = 0; 
         let spyMode = 'one';
         let currentCategory = 'brawl';
         let actualCategory = 'brawl'; 
         const spyIcon = "https://cdn.brawlify.com/profile/28000000.png";
-        
         let apiBrawlersData = [];
 
         fetch('https://api.brawlapi.com/v1/brawlers')
             .then(res => res.json())
             .then(json => { apiBrawlersData = json.list || []; })
-            .catch(err => console.error("Ошибка загрузки BrawlAPI:", err));
+            .catch(err => console.error("Ошибка API:", err));
+
+        let versionTaps = 0;
+        let tapTimeout;
+        
+        function handleVersionTap() {
+            versionTaps++;
+            clearTimeout(tapTimeout);
+            if(versionTaps >= 5) {
+                versionTaps = 0;
+                document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+                resetTheme();
+                updateAdminCharList();
+                showLastGameRoles(); 
+                document.getElementById('admin-menu').classList.remove('hidden');
+            } else {
+                tapTimeout = setTimeout(() => { versionTaps = 0; }, 600);
+            }
+        }
+
+        function showLastGameRoles() {
+            let historyDiv = document.getElementById('adminLastGameRoles');
+            if (lastGameRoles && lastGameRoles.length > 0) {
+                let html = lastGameRoles.map((roleName, index) => {
+                    let color = roleName === "ШПИОН" ? "#ef4444" : "var(--text)";
+                    return `<span style="color: ${color}">Игрок ${index + 1} - ${roleName}</span>`;
+                }).join('<br>');
+                historyDiv.innerHTML = html;
+            } else {
+                historyDiv.innerHTML = "Игр еще не было";
+            }
+        }
+
+        function updateAdminCharList() {
+            const cat = document.getElementById('adminCat').value;
+            const sel = document.getElementById('adminChar');
+            sel.innerHTML = '';
+            data[cat].sort((a,b) => a.n.localeCompare(b.n)).forEach((char) => {
+                let opt = document.createElement('option');
+                opt.value = char.id;
+                opt.innerText = char.n;
+                sel.appendChild(opt);
+            });
+        }
+
+        function closeAdminMenu() {
+            document.getElementById('admin-menu').classList.add('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
+        }
+
+        function startAdminGame() {
+            let count = parseInt(document.getElementById('adminPlayerCount').value) || 2;
+            let cat = document.getElementById('adminCat').value;
+            let charId = document.getElementById('adminChar').value;
+            let spyStr = document.getElementById('adminSpies').value;
+            
+            let spiesIndices = [];
+            if (spyStr.trim() !== '') {
+                spiesIndices = spyStr.split(',').map(s => parseInt(s.trim()) - 1).filter(n => !isNaN(n) && n >= 0 && n < count);
+            }
+
+            let pick = data[cat].find(c => c.id === charId);
+            actualCategory = cat;
+            
+            roles = [];
+            for (let i = 0; i < count; i++) {
+                if (spiesIndices.includes(i)) {
+                    roles.push({ n: "ШПИОН", id: "spy", img: spyIcon, cat: cat });
+                } else {
+                    let initialImg = ""; let brawlerNumId = null;
+                    if (cat === 'brawl') {
+                        let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, ''));
+                        if (apiMatch) { brawlerNumId = apiMatch.id; initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`; }
+                    } else if (cat === 'clash') initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
+                    else if (cat === 'genshin') initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
+                    else initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
+
+                    roles.push({ n: pick.n.toUpperCase(), id: pick.id, img: initialImg, numId: brawlerNumId, cat: cat });
+                }
+            }
+
+            lastGameRoles = roles.map(r => r.n); 
+            currentIndex = 0;
+            document.getElementById('admin-menu').classList.add('hidden'); 
+            document.getElementById('game').classList.remove('hidden'); 
+            updateUI();
+        }
 
         function resetTheme() {
             document.body.classList.remove('theme-random');
             let root = document.documentElement;
-            root.style.setProperty('--accent', '#38bdf8');
-            root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)');
-            root.style.setProperty('--btn-text-color', '#0f172a');
+            root.style.setProperty('--accent', '#38bdf8'); root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)'); root.style.setProperty('--btn-text-color', '#0f172a');
         }
 
-        function showCategories() { 
-            resetTheme(); 
-            document.getElementById('main-menu').classList.add('hidden'); 
-            document.getElementById('category-menu').classList.remove('hidden'); 
+        function showCategories() { resetTheme(); document.getElementById('main-menu').classList.add('hidden'); document.getElementById('category-menu').classList.remove('hidden'); }
+        function goBackToMain() { resetTheme(); document.getElementById('category-menu').classList.add('hidden'); document.getElementById('main-menu').classList.remove('hidden'); }
+        
+        function checkStartButton() {
+            let btn = document.getElementById('startGameBtn');
+            if (currentCategory === 'random') {
+                let activeCount = document.querySelectorAll('#randCats .cat-toggle.active').length;
+                if (activeCount < 2) {
+                    btn.disabled = true;
+                    btn.innerText = "ВЫБЕРИТЕ МИНИМУМ 2"; // Сократили текст, чтобы он не переносился
+                    btn.style.fontSize = "14px";
+                } else {
+                    btn.disabled = false;
+                    btn.innerText = "НАЧАТЬ";
+                    btn.style.fontSize = "16px";
+                }
+            } else {
+                btn.disabled = false;
+                btn.innerText = "НАЧАТЬ";
+                btn.style.fontSize = "16px";
+            }
         }
-        function goBackToMain() { 
-            resetTheme();
-            document.getElementById('category-menu').classList.add('hidden'); 
-            document.getElementById('main-menu').classList.remove('hidden'); 
+
+        function toggleRandomCat(element) {
+            element.classList.toggle('active');
+            checkStartButton();
         }
+        
         function showSetup(cat) { 
             currentCategory = cat;
-            let root = document.documentElement;
             document.body.classList.remove('theme-random');
+            let root = document.documentElement;
             root.style.setProperty('--btn-text-color', '#0f172a');
+            document.getElementById('randomSettings').classList.add('hidden');
             
-            if (cat === 'minecraft') {
-                root.style.setProperty('--accent', '#4ade80');
-                root.style.setProperty('--shadow-color', 'rgba(74, 222, 128, 0.4)');
-                document.getElementById('setupTitle').innerText = 'Minecraft';
-            } else if (cat === 'clash') {
-                root.style.setProperty('--accent', '#fbbf24');
-                root.style.setProperty('--shadow-color', 'rgba(251, 191, 36, 0.4)');
-                document.getElementById('setupTitle').innerText = 'Clash Royale';
-            } else if (cat === 'genshin') {
-                root.style.setProperty('--accent', '#f8fafc');
-                root.style.setProperty('--shadow-color', 'rgba(248, 250, 252, 0.3)');
-                document.getElementById('setupTitle').innerText = 'Genshin Impact';
-            } else if (cat === 'random') {
-                document.body.classList.add('theme-random');
-                document.getElementById('setupTitle').innerText = 'Рандом';
-            } else {
-                root.style.setProperty('--accent', '#38bdf8');
-                root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)');
-                document.getElementById('setupTitle').innerText = 'Brawl Stars';
-            }
+            if (cat === 'minecraft') { root.style.setProperty('--accent', '#4ade80'); root.style.setProperty('--shadow-color', 'rgba(74, 222, 128, 0.4)'); document.getElementById('setupTitle').innerText = 'Minecraft'; } 
+            else if (cat === 'clash') { root.style.setProperty('--accent', '#fbbf24'); root.style.setProperty('--shadow-color', 'rgba(251, 191, 36, 0.4)'); document.getElementById('setupTitle').innerText = 'Clash Royale'; } 
+            else if (cat === 'genshin') { root.style.setProperty('--accent', '#f8fafc'); root.style.setProperty('--shadow-color', 'rgba(248, 250, 252, 0.3)'); document.getElementById('setupTitle').innerText = 'Genshin Impact'; } 
+            else if (cat === 'random') { document.body.classList.add('theme-random'); document.getElementById('setupTitle').innerText = 'Рандом'; document.getElementById('randomSettings').classList.remove('hidden'); } 
+            else { root.style.setProperty('--accent', '#38bdf8'); root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)'); document.getElementById('setupTitle').innerText = 'Brawl Stars'; }
             
-            document.getElementById('category-menu').classList.add('hidden'); 
-            document.getElementById('setup').classList.remove('hidden'); 
+            checkStartButton();
+            document.getElementById('category-menu').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); 
         }
-        function goBackToCategories() { 
-            resetTheme();
-            document.getElementById('setup').classList.add('hidden'); 
-            document.getElementById('category-menu').classList.remove('hidden'); 
-        }
-
-        function setMode(m) { 
-            spyMode = m; 
-            document.getElementById('btn1').classList.toggle('active', m === 'one'); 
-            document.getElementById('btnRnd').classList.toggle('active', m === 'random'); 
-        }
+        
+        function goBackToCategories() { resetTheme(); document.getElementById('setup').classList.add('hidden'); document.getElementById('category-menu').classList.remove('hidden'); }
+        function setMode(m) { spyMode = m; document.getElementById('btn1').classList.toggle('active', m === 'one'); document.getElementById('btnRnd').classList.toggle('active', m === 'random'); }
 
         function startGame() {
             let count = parseInt(document.getElementById('playerCount').value) || 3;
             count = Math.min(Math.max(count, 2), 100);
-            roles = []; currentIndex = 0;
-
-            actualCategory = currentCategory;
+            roles = []; currentIndex = 0; actualCategory = currentCategory;
+            
             if (currentCategory === 'random') {
-                const cats = ['brawl', 'minecraft', 'clash', 'genshin'];
+                let activeToggles = document.querySelectorAll('#randCats .cat-toggle.active');
+                let cats = Array.from(activeToggles).map(el => el.dataset.val);
                 actualCategory = cats[Math.floor(Math.random() * cats.length)];
             }
 
             let list = data[actualCategory];
             let pick = list[Math.floor(Math.random() * list.length)];
             
-            let initialImg = "";
-            let brawlerNumId = null;
-
+            let initialImg = ""; let brawlerNumId = null;
             if (actualCategory === 'brawl') {
-                let apiMatch = apiBrawlersData.find(b => 
-                    b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, '')
-                );
-                if (apiMatch) {
-                    brawlerNumId = apiMatch.id;
-                    initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`;
-                }
-            } else if (actualCategory === 'clash') {
-                initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
-            } else if (actualCategory === 'genshin') {
-                // Используем портреты в полный рост
-                initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
-            } else {
-                initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
-            }
+                let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, ''));
+                if (apiMatch) { brawlerNumId = apiMatch.id; initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`; }
+            } else if (actualCategory === 'clash') initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
+            else if (actualCategory === 'genshin') initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
+            else initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
 
-            for(let i=0; i<count; i++) {
-                roles.push({ 
-                    n: pick.n.toUpperCase(), 
-                    id: pick.id, 
-                    img: initialImg, 
-                    numId: brawlerNumId, 
-                    cat: actualCategory 
-                });
-            }
+            for(let i=0; i<count; i++) roles.push({ n: pick.n.toUpperCase(), id: pick.id, img: initialImg, numId: brawlerNumId, cat: actualCategory });
 
             let spies = spyMode === 'one' ? 1 : Math.floor(Math.random() * (count + 1));
             let placed = 0;
             while(placed < spies) {
                 let rIdx = Math.floor(Math.random() * count);
-                if(roles[rIdx].n !== "ШПИОН") { 
-                    roles[rIdx] = { n: "ШПИОН", id: "spy", img: spyIcon, cat: actualCategory }; 
-                    placed++; 
-                }
+                if(roles[rIdx].n !== "ШПИОН") { roles[rIdx] = { n: "ШПИОН", id: "spy", img: spyIcon, cat: actualCategory }; placed++; }
             }
 
-            [...new Set(roles.map(r => r.img))].forEach(src => {
-                if(src) { const pre = new Image(); pre.src = src; }
-            });
+            lastGameRoles = roles.map(r => r.n);
 
-            document.getElementById('setup').classList.add('hidden'); 
-            document.getElementById('game').classList.remove('hidden'); 
-            updateUI();
+            document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); updateUI();
         }
 
         function showRole() {
@@ -432,76 +500,44 @@
             document.getElementById('roleText').innerText = r.n;
             let img = document.getElementById('roleImg');
             
-            img.dataset.step = '0';
-            img.onerror = null; 
-            img.src = ''; 
+            img.dataset.step = '0'; img.onerror = null; img.src = ''; 
             
             function setFallback() {
-                img.onerror = null;
-                let fallbackName = (r.n === "ШПИОН") ? "?" : r.n; 
-                let bg = (r.n === "ШПИОН") ? "ef4444" : 
-                         (r.cat === 'minecraft' ? "4ade80" : 
-                         (r.cat === 'clash' ? "fbbf24" : 
-                         (r.cat === 'genshin' ? "f8fafc" : "38bdf8")));
+                img.onerror = null; let fallbackName = (r.n === "ШПИОН") ? "?" : r.n; 
+                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : (r.cat === 'clash' ? "fbbf24" : (r.cat === 'genshin' ? "f8fafc" : "38bdf8")));
                 let color = (r.cat === 'genshin' && r.n !== "ШПИОН") ? "0f172a" : "ffffff";
                 if (r.n !== "ШПИОН" && r.cat !== 'genshin') color = "0f172a";
-                
                 img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=${bg}&color=${color}&size=200&font-size=0.4`;
             }
 
             img.onerror = function() {
-                let step = parseInt(this.dataset.step);
-                this.dataset.step = step + 1;
-                
+                let step = parseInt(this.dataset.step); this.dataset.step = step + 1;
                 if (r.cat === 'minecraft' && r.id !== 'spy') {
-                    if (step === 0) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}.png`;
-                    else if (step === 1) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE1_BE1.png`;
-                    else if (step === 2) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE3.png`;
-                    else setFallback();
+                    if (step === 0) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}.png`; else if (step === 1) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE1_BE1.png`; else if (step === 2) this.src = `https://minecraft.wiki/wiki/Special:FilePath/${r.id}_JE3.png`; else setFallback();
                 } else if (r.cat === 'clash' && r.id !== 'spy') {
-                    if (step === 0) this.src = `https://cdn.royaleapi.com/static/img/cards/${r.id}.png`;
-                    else setFallback();
+                    if (step === 0) this.src = `https://cdn.royaleapi.com/static/img/cards/${r.id}.png`; else setFallback();
                 } else if (r.cat === 'genshin' && r.id !== 'spy') {
-                    // Если портрет в полный рост не загрузился, пробуем гача-сплеш или иконку
-                    if (step === 0) this.src = `https://genshin.jmp.blue/characters/${r.id}/gacha-splash`;
-                    else if (step === 1) this.src = `https://genshin.jmp.blue/characters/${r.id}/icon-big`;
-                    else setFallback();
+                    if (step === 0) this.src = `https://genshin.jmp.blue/characters/${r.id}/gacha-splash`; else if (step === 1) this.src = `https://genshin.jmp.blue/characters/${r.id}/icon-big`; else setFallback();
                 } else if (r.cat === 'brawl' && r.id !== 'spy') {
-                    if (r.numId) {
-                        if (step === 0) this.src = `https://cdn.brawlify.com/brawlers/borderless/${r.numId}.png`;
-                        else if (step === 1) this.src = `https://cdn.brawlify.com/brawler/${r.numId}.png`;
-                        else setFallback();
-                    } else setFallback();
-                } else {
-                    setFallback();
-                }
+                    if (r.numId) { if (step === 0) this.src = `https://cdn.brawlify.com/brawlers/borderless/${r.numId}.png`; else if (step === 1) this.src = `https://cdn.brawlify.com/brawler/${r.numId}.png`; else setFallback(); } else setFallback();
+                } else setFallback();
             };
 
-            if(r.img) {
-                img.src = r.img;
-            } else {
-                setFallback();
-            }
+            if(r.img) img.src = r.img; else setFallback();
 
-            document.getElementById('tapArea').classList.add('hidden');
-            document.getElementById('roleCard').classList.remove('hidden');
+            document.getElementById('tapArea').classList.add('hidden'); document.getElementById('roleCard').classList.remove('hidden');
         }
 
         function nextPlayer() {
             currentIndex++;
             if(currentIndex >= roles.length) {
-                document.getElementById('game').classList.add('hidden');
-                resetTheme();
-                document.getElementById('main-menu').classList.remove('hidden');
-                let n = document.getElementById('notification');
-                n.classList.add('show');
-                setTimeout(() => n.classList.remove('show'), 3000);
+                document.getElementById('game').classList.add('hidden'); resetTheme(); document.getElementById('main-menu').classList.remove('hidden');
+                let n = document.getElementById('notification'); n.classList.add('show'); setTimeout(() => n.classList.remove('show'), 3000);
             } else updateUI();
         }
 
         function updateUI() {
-            document.getElementById('roleCard').classList.add('hidden');
-            document.getElementById('tapArea').classList.remove('hidden');
+            document.getElementById('roleCard').classList.add('hidden'); document.getElementById('tapArea').classList.remove('hidden');
             document.getElementById('playerInstruction').innerText = `Игрок №${currentIndex + 1}, забери устройство`;
             document.getElementById('playerStatus').innerText = `Прогресс: ${currentIndex} / ${roles.length}`;
         }
