@@ -62,7 +62,7 @@
             font-weight: 800; 
             border-radius: 16px; 
             width: 100%; 
-            min-height: 54px; /* Фиксируем высоту, чтобы избежать дерганья экрана */
+            min-height: 54px; 
             box-sizing: border-box;
             display: flex;
             align-items: center;
@@ -108,6 +108,7 @@
         .btn-mc { background: #4ade80 !important; color: #064e3b !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(74, 222, 128, 0.3) !important;}
         .btn-cr { background: #fbbf24 !important; color: #451a03 !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(251, 191, 36, 0.3) !important;}
         .btn-genshin { background: #f8fafc !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(248, 250, 252, 0.3) !important;}
+        .btn-locations { background: #14b8a6 !important; color: #042f2e !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(20, 184, 166, 0.3) !important;}
         .btn-random { 
             background: linear-gradient(90deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; 
             background-size: 300% 100% !important; animation: gradientPan 4s linear infinite !important;
@@ -151,7 +152,7 @@
             width: 180px; height: 180px; margin: 15px auto; position: relative; display: flex; align-items: center; justify-content: center; 
             background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)); border-radius: 24px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
-        .role-img { width: 100%; height: 100%; object-fit: contain; animation: breathing 3s ease-in-out infinite; }
+        .role-img { width: 100%; height: 100%; object-fit: cover; animation: breathing 3s ease-in-out infinite; border-radius: 12px; }
 
         .hidden { display: none !important; }
         .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); z-index: 999; padding: 10px; cursor: default;}
@@ -169,9 +170,12 @@
         @keyframes gradientPan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
         @keyframes fadeScreenIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes breathing { 0% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } 50% { transform: scale(1.08); filter: drop-shadow(0 15px 25px var(--shadow-color)); } 100% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } }
-        @keyframes popInCard { 0% { transform: scale(0.8) rotate(-5deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+        
+        /* ОБЫЧНАЯ АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧКИ (FADE + SCALE) */
+        @keyframes popInCard { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        #roleCard:not(.hidden) { animation: popInCard 0.3s ease-out forwards; }
+        
         @keyframes pulseDash { 0% { border-color: rgba(148, 163, 184, 0.3); } 100% { border-color: rgba(148, 163, 184, 0.7); } }
-        #roleCard:not(.hidden) { animation: popInCard 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.2) forwards; }
         
         #notification { 
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
@@ -208,6 +212,7 @@
             <button class="main-btn btn-mc" onclick="showSetup('minecraft')">MINECRAFT</button>
             <button class="main-btn btn-cr" onclick="showSetup('clash')">CLASH ROYALE</button>
             <button class="main-btn btn-genshin" onclick="showSetup('genshin')">GENSHIN IMPACT</button>
+            <button class="main-btn btn-locations" onclick="showSetup('locations')">ЛОКАЦИИ</button>
             <button class="main-btn btn-random" onclick="showSetup('random')">🎲 РАНДОМ</button>
         </div>
         <button class="main-btn secondary-btn" onclick="goBackToMain()">НАЗАД</button>
@@ -232,6 +237,7 @@
                     <div class="cat-toggle active" data-val="minecraft" onclick="toggleRandomCat(this)">Minecraft</div>
                     <div class="cat-toggle active" data-val="clash" onclick="toggleRandomCat(this)">Clash Royale</div>
                     <div class="cat-toggle active" data-val="genshin" onclick="toggleRandomCat(this)">Genshin Impact</div>
+                    <div class="cat-toggle active" data-val="locations" onclick="toggleRandomCat(this)">Локации</div>
                 </div>
             </div>
         </div>
@@ -249,6 +255,7 @@
                     <option value="minecraft">Minecraft</option>
                     <option value="clash">Clash Royale</option>
                     <option value="genshin">Genshin Impact</option>
+                    <option value="locations">Локации</option>
                 </select>
             </div>
             <div class="admin-row">
@@ -287,7 +294,7 @@
         <p id="playerStatus" style="color: var(--secondary); margin-top: 20px; font-weight: 600; letter-spacing: 1px;"></p>
     </div>
 
-    <div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 3.1</div>
+    <div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 4.0</div>
 
     <script>
         const data = {
@@ -302,6 +309,58 @@
             ],
             genshin: [
                 {n:"Итэр", id:"aether"}, {n:"Люмин", id:"lumine"}, {n:"Джинн", id:"jean"}, {n:"Эмбер", id:"amber"}, {n:"Кэйа", id:"kaeya"}, {n:"Лиза", id:"lisa"}, {n:"Барбара", id:"barbara"}, {n:"Рэйзор", id:"razor"}, {n:"Венти", id:"venti"}, {n:"Кли", id:"klee"}, {n:"Беннет", id:"bennett"}, {n:"Ноэлль", id:"noelle"}, {n:"Фишль", id:"fischl"}, {n:"Сахароза", id:"sucrose"}, {n:"Мона", id:"mona"}, {n:"Дилюк", id:"diluc"}, {n:"Сян Лин", id:"xiangling"}, {n:"Син Цю", id:"xingqiu"}, {n:"Бэй Доу", id:"beidou"}, {n:"Нин Гуан", id:"ningguang"}, {n:"Чун Юнь", id:"chongyun"}, {n:"Ци Ци", id:"qiqi"}, {n:"Кэ Цин", id:"keqing"}, {n:"Тарталья", id:"tartaglia"}, {n:"Диона", id:"diona"}, {n:"Чжун Ли", id:"zhongli"}, {n:"Альбедо", id:"albedo"}, {n:"Гань Юй", id:"ganyu"}, {n:"Сяо", id:"xiao"}, {n:"Ху Тао", id:"hu-tao"}, {n:"Розария", id:"rosaria"}, {n:"Янь Фэй", id:"yanfei"}, {n:"Эола", id:"eula"}, {n:"Кадзуха", id:"kazuha"}, {n:"Аяка", id:"ayaka"}, {n:"Ёимия", id:"yoimiya"}, {n:"Райдэн", id:"raiden"}, {n:"Кокоми", id:"kokomi"}, {n:"Тома", id:"thoma"}, {n:"Итто", id:"itto"}, {n:"Горо", id:"gorou"}, {n:"Шэнь Хэ", id:"shenhe"}, {n:"Яэ Мико", id:"yae-miko"}, {n:"Аято", id:"ayato"}, {n:"Е Лань", id:"yelan"}, {n:"Куки Синобу", id:"kuki-shinobu"}, {n:"Хэйдзо", id:"heizou"}, {n:"Тигнари", id:"tighnari"}, {n:"Коллеи", id:"collei"}, {n:"Сайно", id:"cyno"}, {n:"Нилу", id:"nilou"}, {n:"Нахида", id:"nahida"}, {n:"Лайла", id:"layla"}, {n:"Странник", id:"wanderer"}, {n:"Фарузан", id:"faruzan"}, {n:"Аль-Хайтам", id:"alhaitham"}, {n:"Яо Яо", id:"yaoyao"}, {n:"Дэхья", id:"dehya"}, {n:"Бай Чжу", id:"baizhu"}, {n:"Кавех", id:"kaveh"}, {n:"Лини", id:"lyney"}, {n:"Линетт", id:"lynette"}, {n:"Фремине", id:"freminet"}, {n:"Нёвиллет", id:"neuvillette"}, {n:"Ризли", id:"wriothesley"}, {n:"Фурина", id:"furina"}, {n:"Навия", id:"navia"}, {n:"Шеврёз", id:"chevreuse"}, {n:"Сянь Юнь", id:"xianyun"}, {n:"Ка Мин", id:"gaming"}, {n:"Тиори", id:"chiori"}, {n:"Арлекино", id:"arlecchino"}, {n:"Муалани", id:"mualani"}, {n:"Кинич", id:"kinich"}, {n:"Качина", id:"kachina"}, {n:"Шилонен", id:"xilonen"}, {n:"Часка", id:"chasca"}, {n:"Оророн", id:"ororon"}, {n:"Мавуика", id:"mavuika"}, {n:"Ситлали", id:"citlali"}, {n:"Лань Янь", id:"lanyan"}, {n:"Прюн", id:"prume"}
+            ],
+            locations: [
+                {n:"Школа", id:"school", img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Лес", id:"forest", img:"https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Больница", id:"hospital", img:"https://images.unsplash.com/photo-1586773860418-d3b9696a329d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Полицейский участок", id:"police", img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пляж", id:"beach", img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400&auto=format&fit=crop"},
+                {n:"Космическая станция", id:"space_station", img:"https://images.unsplash.com/photo-1614314107768-6018061b5b7d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Подводная лодка", id:"submarine", img:"https://images.unsplash.com/photo-1511210112836-e8b2b73347c6?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ресторан", id:"restaurant", img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=400&auto=format&fit=crop"},
+                {n:"Супермаркет", id:"supermarket", img:"https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Банк", id:"bank", img:"https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?q=80&w=400&auto=format&fit=crop"},
+                {n:"Кинотеатр", id:"cinema", img:"https://images.unsplash.com/photo-1512070679279-8988d32161be?q=80&w=400&auto=format&fit=crop"},
+                {n:"Аэропорт", id:"airport", img:"https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Вокзал", id:"train_station", img:"https://images.unsplash.com/photo-1569075135118-2e0e0149ff4a?q=80&w=400&auto=format&fit=crop"},
+                {n:"Музей", id:"museum", img:"https://images.unsplash.com/photo-1566121408169-6b58ebc88a8d?q=80&w=400&auto=format&fit=crop"},
+                {n:"База террористов", id:"terrorist_base", img:"https://images.unsplash.com/photo-1605641774328-76a0f0e74f9d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Цирк-шапито", id:"circus", img:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&auto=format&fit=crop"},
+                {n:"Отель", id:"hotel", img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop"},
+                {n:"Церковь", id:"church", img:"https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Воинская часть", id:"military_base", img:"https://images.unsplash.com/photo-1590018193897-4b47d3c5e8b4?q=80&w=400&auto=format&fit=crop"},
+                {n:"Казино", id:"casino", img:"https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пиратский корабль", id:"pirate_ship", img:"https://images.unsplash.com/photo-1603588234855-66795f5901b3?q=80&w=400&auto=format&fit=crop"},
+                {n:"Полярная станция", id:"polar_station", img:"https://images.unsplash.com/photo-1549419163-b1d75c9d64f1?q=80&w=400&auto=format&fit=crop"},
+                {n:"Париж", id:"paris", img:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400&auto=format&fit=crop"},
+                {n:"Египетские пирамиды", id:"pyramids", img:"https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=400&auto=format&fit=crop"},
+                {n:"Замок Дракулы", id:"dracula_castle", img:"https://images.unsplash.com/photo-1542459981-d1c7f7690623?q=80&w=400&auto=format&fit=crop"},
+                {n:"Тюрьма", id:"prison", img:"https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Хогвартс", id:"hogwarts", img:"https://images.unsplash.com/photo-1598112972545-bfb8109d9361?q=80&w=400&auto=format&fit=crop"},
+                {n:"Титаник", id:"titanic", img:"https://images.unsplash.com/photo-1582239414541-077eb5dd7a96?q=80&w=400&auto=format&fit=crop"},
+                {n:"Кладбище", id:"cemetery", img:"https://images.unsplash.com/photo-1510952010185-9831f28b3e8e?q=80&w=400&auto=format&fit=crop"},
+                {n:"Библиотека", id:"library", img:"https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=400&auto=format&fit=crop"},
+                {n:"Стадион", id:"stadium", img:"https://images.unsplash.com/photo-1521517172023-e4c196889755?q=80&w=400&auto=format&fit=crop"},
+                {n:"Завод", id:"factory", img:"https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=400&auto=format&fit=crop"},
+                {n:"Шахта", id:"mine", img:"https://images.unsplash.com/photo-1595180017163-953b05481a56?q=80&w=400&auto=format&fit=crop"},
+                {n:"Аквапарк", id:"water_park", img:"https://images.unsplash.com/photo-1629813075276-85f0c4063231?q=80&w=400&auto=format&fit=crop"},
+                {n:"Зоопарк", id:"zoo", img:"https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=400&auto=format&fit=crop"},
+                {n:"Парк аттракционов", id:"amusement_park", img:"https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?q=80&w=400&auto=format&fit=crop"},
+                {n:"Станция метро", id:"subway", img:"https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"},
+                {n:"Бункер", id:"bunker", img:"https://images.unsplash.com/photo-1629221199347-f705b6343516?q=80&w=400&auto=format&fit=crop"},
+                {n:"Театр", id:"theater", img:"https://images.unsplash.com/photo-1503095396549-807a893661c2?q=80&w=400&auto=format&fit=crop"},
+                {n:"Небоскреб", id:"skyscraper", img:"https://images.unsplash.com/photo-1582232549216-7d63a43f8a42?q=80&w=400&auto=format&fit=crop"},
+                {n:"Круизный лайнер", id:"cruise_ship", img:"https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=400&auto=format&fit=crop"},
+                {n:"База на Луне", id:"moon_base", img:"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=400&auto=format&fit=crop"},
+                {n:"Телестудия", id:"tv_studio", img:"https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ночной клуб", id:"nightclub", img:"https://images.unsplash.com/photo-1563299723-57502759e0f6?q=80&w=400&auto=format&fit=crop"},
+                {n:"Автосалон", id:"car_dealership", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пожарная часть", id:"fire_station", img:"https://images.unsplash.com/photo-1596700813941-8f5536484196?q=80&w=400&auto=format&fit=crop"},
+                {n:"Стройка", id:"construction", img:"https://images.unsplash.com/photo-1504307651254-35680f3366d3?q=80&w=400&auto=format&fit=crop"},
+                {n:"Горнолыжный курорт", id:"ski_resort", img:"https://images.unsplash.com/photo-1551811342-6e27a9221199?q=80&w=400&auto=format&fit=crop"},
+                {n:"Заброшенная больница", id:"abandoned_asylum", img:"https://images.unsplash.com/photo-1601662528567-526cf06f6582?q=80&w=400&auto=format&fit=crop"},
+                {n:"Спа-салон", id:"spa", img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=400&auto=format&fit=crop"}
             ]
         };
 
@@ -392,6 +451,7 @@
                         if (apiMatch) { brawlerNumId = apiMatch.id; initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`; }
                     } else if (cat === 'clash') initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
                     else if (cat === 'genshin') initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
+                    else if (cat === 'locations') initialImg = pick.img;
                     else initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
 
                     roles.push({ n: pick.n.toUpperCase(), id: pick.id, img: initialImg, numId: brawlerNumId, cat: cat });
@@ -420,7 +480,7 @@
                 let activeCount = document.querySelectorAll('#randCats .cat-toggle.active').length;
                 if (activeCount < 2) {
                     btn.disabled = true;
-                    btn.innerText = "ВЫБЕРИТЕ МИНИМУМ 2"; // Сократили текст, чтобы он не переносился
+                    btn.innerText = "ВЫБЕРИТЕ МИНИМУМ 2"; 
                     btn.style.fontSize = "14px";
                 } else {
                     btn.disabled = false;
@@ -449,6 +509,7 @@
             if (cat === 'minecraft') { root.style.setProperty('--accent', '#4ade80'); root.style.setProperty('--shadow-color', 'rgba(74, 222, 128, 0.4)'); document.getElementById('setupTitle').innerText = 'Minecraft'; } 
             else if (cat === 'clash') { root.style.setProperty('--accent', '#fbbf24'); root.style.setProperty('--shadow-color', 'rgba(251, 191, 36, 0.4)'); document.getElementById('setupTitle').innerText = 'Clash Royale'; } 
             else if (cat === 'genshin') { root.style.setProperty('--accent', '#f8fafc'); root.style.setProperty('--shadow-color', 'rgba(248, 250, 252, 0.3)'); document.getElementById('setupTitle').innerText = 'Genshin Impact'; } 
+            else if (cat === 'locations') { root.style.setProperty('--accent', '#14b8a6'); root.style.setProperty('--shadow-color', 'rgba(20, 184, 166, 0.4)'); document.getElementById('setupTitle').innerText = 'Локации'; } 
             else if (cat === 'random') { document.body.classList.add('theme-random'); document.getElementById('setupTitle').innerText = 'Рандом'; document.getElementById('randomSettings').classList.remove('hidden'); } 
             else { root.style.setProperty('--accent', '#38bdf8'); root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)'); document.getElementById('setupTitle').innerText = 'Brawl Stars'; }
             
@@ -475,15 +536,17 @@
             
             let initialImg = ""; let brawlerNumId = null;
             if (actualCategory === 'brawl') {
-                let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, ''));
+                let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-99]/g, ''));
                 if (apiMatch) { brawlerNumId = apiMatch.id; initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`; }
             } else if (actualCategory === 'clash') initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
             else if (actualCategory === 'genshin') initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
+            else if (actualCategory === 'locations') initialImg = pick.img;
             else initialImg = `https://minecraft.wiki/wiki/Special:FilePath/${pick.id}_JE2_BE2.png`;
 
             for(let i=0; i<count; i++) roles.push({ n: pick.n.toUpperCase(), id: pick.id, img: initialImg, numId: brawlerNumId, cat: actualCategory });
 
-            let spies = spyMode === 'one' ? 1 : Math.floor(Math.random() * (count + 1));
+            // Удален гарант: в рандомном режиме может быть 0 шпионов
+            let spies = spyMode === 'one' ? 1 : Math.floor(Math.random() * count);
             let placed = 0;
             while(placed < spies) {
                 let rIdx = Math.floor(Math.random() * count);
@@ -504,7 +567,7 @@
             
             function setFallback() {
                 img.onerror = null; let fallbackName = (r.n === "ШПИОН") ? "?" : r.n; 
-                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : (r.cat === 'clash' ? "fbbf24" : (r.cat === 'genshin' ? "f8fafc" : "38bdf8")));
+                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : (r.cat === 'clash' ? "fbbf24" : (r.cat === 'genshin' ? "f8fafc" : (r.cat === 'locations' ? "14b8a6" : "38bdf8"))));
                 let color = (r.cat === 'genshin' && r.n !== "ШПИОН") ? "0f172a" : "ffffff";
                 if (r.n !== "ШПИОН" && r.cat !== 'genshin') color = "0f172a";
                 img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=${bg}&color=${color}&size=200&font-size=0.4`;
@@ -525,7 +588,13 @@
 
             if(r.img) img.src = r.img; else setFallback();
 
-            document.getElementById('tapArea').classList.add('hidden'); document.getElementById('roleCard').classList.remove('hidden');
+            // Перезапуск анимации переворота
+            let card = document.getElementById('roleCard');
+            card.style.animation = 'none';
+            card.offsetHeight; // триггер reflow
+            card.style.animation = null;
+
+            document.getElementById('tapArea').classList.add('hidden'); card.classList.remove('hidden');
         }
 
         function nextPlayer() {
