@@ -5,209 +5,283 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Xleb Games</title>
     <style>
-        :root { 
-            --bg: #0f172a; 
-            --card-bg: #1e293b; 
-            --accent: #38bdf8; 
-            --shadow-color: rgba(56, 189, 248, 0.4); 
-            --text: #f8fafc; 
-            --btn-text-color: #0f172a;
-            --secondary: #94a3b8; 
-            --btn-inactive: #334155; 
-            --card-border: 1px solid rgba(255,255,255,0.1);
+        :root {
+            --bg: #07071c;
+            --accent: #818cf8;
+            --accent-glow: rgba(129, 140, 248, 0.5);
+            --active-text: #ffffff;
+            --glass-bg: rgba(15, 15, 35, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text: #ffffff;
+            --text-secondary: #b0b8ff;
+            --radius: 1.8rem;
+            --transition: 0.25s ease-out;
         }
-        
+
         * {
             -webkit-tap-highlight-color: transparent;
-        }
-
-        body { 
-            background: var(--bg);
-            background: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg) 70%);
-            background-size: 100% 200%;
-            animation: bgShift 8s ease-in-out infinite alternate;
-            color: var(--text); 
-            font-family: 'Segoe UI', sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden; 
-            text-align: center; 
-            transition: all 0.5s ease;
-        }
-        
-        .container { 
-            width: 90%; 
-            max-width: 400px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        
-        .container:not(.hidden) {
-            animation: fadeScreenIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        button { cursor: pointer; border: none; font-family: inherit; outline: none; }
-        
-        button.main-btn { 
-            background: var(--accent); 
-            color: var(--btn-text-color); 
-            padding: 10px 20px; 
-            font-size: 16px; 
-            font-weight: 800; 
-            border-radius: 16px; 
-            width: 100%; 
-            min-height: 54px; 
             box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
             text-align: center;
-            line-height: 1.2;
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px var(--shadow-color); 
+            position: relative;
+        }
+
+        .aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 20%, rgba(129,140,248,0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(244,114,182,0.2) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 60%, rgba(56,189,248,0.15) 0%, transparent 50%);
+            background-size: 100% 100%;
+            animation: auroraShift 20s ease-in-out infinite;
+        }
+        @keyframes auroraShift {
+            0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+            50% { background-position: 100% 20%, 0% 80%, 70% 30%; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+        }
+        .container:not(.hidden) {
+            animation: screenIn 0.3s ease-out forwards;
+        }
+        @keyframes screenIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .hidden { display: none !important; }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+            width: 100%;
+        }
+
+        #roleCard.card {
+            background: rgba(20, 20, 45, 0.85);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        .dashed-card {
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed rgba(255,255,255,0.25);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            animation: dashPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes dashPulse {
+            0%, 100% { border-color: rgba(255,255,255,0.12); }
+            50% { border-color: rgba(255,255,255,0.45); }
+        }
+
+        h1 {
+            font-weight: 900;
+            font-size: 2.6rem;
+            letter-spacing: 0.03em;
+            margin: 0;
+            background: linear-gradient(135deg, #e0e7ff, #a5b4fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+            background-size: 200% 200%;
+            animation: titleShine 5s ease infinite;
+        }
+        @keyframes titleShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        h2 {
+            font-size: 2rem;
+            margin: 0.3rem 0;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            outline: none;
             position: relative;
             overflow: hidden;
-            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
         }
-        
-        button.main-btn.secondary-btn {
-            background: var(--btn-inactive); 
-            color: white; 
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2); 
-            margin-top: 15px;
+        button.main-btn {
+            background: linear-gradient(135deg, #818cf8, #6366f1);
+            color: #fff;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 1.2rem;
+            width: 100%;
+            min-height: 54px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            box-shadow: 0 6px 22px var(--accent-glow);
+            will-change: transform;
         }
-
-        button.main-btn::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg); transition: 0.5s;
+        button.main-btn:active:not(:disabled) {
+            transform: scale(0.96);
+            box-shadow: 0 2px 12px var(--accent-glow);
         }
-        
-        button.main-btn:active:not(:disabled) { 
-            transform: translateY(4px) scale(0.98); 
-            box-shadow: 0 0px 0 rgba(0,0,0,0.3), 0 5px 10px rgba(0,0,0,0.2); 
-        }
-
         button.main-btn:disabled {
-            background: var(--btn-inactive) !important;
-            color: var(--secondary) !important;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.2) !important;
+            background: rgba(40,40,60,0.6) !important;
+            color: rgba(255,255,255,0.3) !important;
+            box-shadow: none !important;
             cursor: not-allowed;
             transform: none !important;
-            border-color: transparent !important;
         }
-        button.main-btn:disabled::after { display: none; }
-
-        .btn-brawl { background: #38bdf8 !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(56, 189, 248, 0.3) !important;}
-        .btn-mc { background: #4ade80 !important; color: #064e3b !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(74, 222, 128, 0.3) !important;}
-        .btn-cr { background: #fbbf24 !important; color: #451a03 !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(251, 191, 36, 0.3) !important;}
-        .btn-genshin { background: #f8fafc !important; color: #0f172a !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(248, 250, 252, 0.3) !important;}
-        .btn-locations { background: #14b8a6 !important; color: #042f2e !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(20, 184, 166, 0.3) !important;}
-        .btn-random { 
-            background: linear-gradient(90deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; 
-            background-size: 300% 100% !important; animation: gradientPan 4s linear infinite !important;
-            color: white !important; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192, 132, 252, 0.4) !important;
+        button.main-btn.secondary-btn {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
 
-        h1 { 
-            font-weight: 800; color: var(--accent); margin-top: 0; margin-bottom: 20px; 
-            text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 15px var(--shadow-color);
-            transition: color 0.5s, text-shadow 0.5s;
+        .btn-brawl { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; box-shadow: 0 6px 20px rgba(56,189,248,0.55) !important; }
+        .btn-mc { background: linear-gradient(135deg, #4ade80, #22c55e) !important; box-shadow: 0 6px 20px rgba(74,222,128,0.55) !important; }
+        .btn-cr { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; box-shadow: 0 6px 20px rgba(251,191,36,0.55) !important; }
+        .btn-genshin { background: linear-gradient(135deg, #f8fafc, #e2e8f0) !important; color: #0f172a !important; box-shadow: 0 6px 20px rgba(248,250,252,0.55) !important; }
+        .btn-locations { background: linear-gradient(135deg, #14b8a6, #0d9488) !important; box-shadow: 0 6px 20px rgba(20,184,166,0.55) !important; }
+        .btn-random { background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; background-size: 300% 100% !important; animation: rainbowBtn 3s linear infinite !important; box-shadow: 0 6px 20px rgba(192,132,252,0.55) !important; }
+        @keyframes rainbowBtn { 0%{background-position:0% 50%;} 100%{background-position:100% 50%;} }
+
+        .mode-selector { display: flex; gap: 0.6rem; margin-top: 0.8rem; width: 100%; }
+        .mode-btn {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: 0.9rem;
+            flex: 1;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.25s ease-out;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        h2 { font-size: 28px; margin: 10px 0; color: var(--accent); text-shadow: 0 0 15px var(--shadow-color); transition: color 0.5s, text-shadow 0.5s; }
-
-        .card { 
-            background: var(--card-bg); border-radius: 28px; padding: 25px; 
-            box-shadow: 0 20px 30px -5px rgba(0,0,0,0.4), inset 0 0 15px rgba(255,255,255,0.02); 
-            border: var(--card-border); margin-bottom: 20px; width: 100%; box-sizing: border-box; transition: border-color 0.5s;
-        }
-        
-        .dashed-card { 
-            border: 2px dashed var(--secondary); background: rgba(148, 163, 184, 0.05); padding: 20px; margin-bottom: 20px; 
-            border-radius: 16px; animation: pulseDash 2s infinite alternate; transition: border-color 0.5s;
-        }
-
-        input[type="number"], input[type="text"], select { 
-            background: var(--bg); border: 1px solid var(--secondary); color: white; 
-            padding: 12px; border-radius: 12px; outline: none; font-size: 16px;
-        }
-        input[type="number"]:focus, input[type="text"]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 10px var(--shadow-color); }
-
-        .mode-selector { display: flex; gap: 10px; margin-top: 15px; width: 100%; }
-        .mode-btn { background: var(--btn-inactive); color: var(--secondary); padding: 12px; border-radius: 12px; flex: 1; font-weight: 600; transition: all 0.3s; }
-        .mode-btn.active { background: var(--accent); color: var(--btn-text-color); transform: scale(1.05); box-shadow: 0 5px 15px var(--shadow-color); }
-
-        .cat-toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: center; }
-        .cat-toggle { background: var(--btn-inactive); color: var(--secondary); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; user-select: none; border: 1px solid transparent; }
-        .cat-toggle.active { background: var(--accent); color: var(--btn-text-color); box-shadow: 0 2px 8px var(--shadow-color); border-color: var(--accent); }
-
-        .role-img-container { 
-            width: 180px; height: 180px; margin: 15px auto; position: relative; display: flex; align-items: center; justify-content: center; 
-            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3)); border-radius: 24px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        }
-        .role-img { width: 100%; height: 100%; object-fit: cover; animation: breathing 3s ease-in-out infinite; border-radius: 12px; }
-
-        .hidden { display: none !important; }
-        .version-tag { position: fixed; bottom: 10px; font-size: 10px; color: rgba(148, 163, 184, 0.3); z-index: 999; padding: 10px; cursor: default;}
-
-        .admin-row { display: flex; flex-direction: column; text-align: left; margin-bottom: 15px; }
-        .admin-row label { font-size: 12px; color: var(--secondary); margin-bottom: 5px; }
-        .admin-row input, .admin-row select { width: 100%; box-sizing: border-box; }
-        #adminLastGameRoles {
-            font-size: 14px; color: var(--text); max-height: 120px; overflow-y: auto;
-            background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;
-            margin-top: 5px; text-align: left; line-height: 1.5;
+        .mode-btn.active {
+            background: var(--accent);
+            color: var(--active-text);
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px var(--accent-glow);
+            border-color: transparent;
         }
 
-        @keyframes bgShift { 0% { background-position: 50% 0%; } 100% { background-position: 50% 100%; } }
-        @keyframes gradientPan { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-        @keyframes fadeScreenIn { 0% { opacity: 0; transform: translateY(20px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes breathing { 0% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } 50% { transform: scale(1.08); filter: drop-shadow(0 15px 25px var(--shadow-color)); } 100% { transform: scale(1); filter: drop-shadow(0 10px 15px var(--shadow-color)); } }
-        
-        /* ОБЫЧНАЯ АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧКИ (FADE + SCALE) */
-        @keyframes popInCard { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        #roleCard:not(.hidden) { animation: popInCard 0.3s ease-out forwards; }
-        
-        @keyframes pulseDash { 0% { border-color: rgba(148, 163, 184, 0.3); } 100% { border-color: rgba(148, 163, 184, 0.7); } }
-        
-        #notification { 
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
-            background: var(--card-bg); color: var(--accent); padding: 16px 28px; border-radius: 24px; 
-            border: 1px solid var(--accent); transition: top 0.6s; z-index: 1000; font-weight: bold;
+        .cat-toggles { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; justify-content: center; }
+        .cat-toggle {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease-out;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        #notification.show { top: 40px; }
+        .cat-toggle.active {
+            background: var(--accent);
+            color: var(--active-text);
+            box-shadow: 0 4px 12px var(--accent-glow);
+            transform: translateY(-2px);
+        }
 
-        body.theme-random { animation: randomThemeColors 8s linear infinite !important; }
-        body.theme-random .main-btn:not(.secondary-btn):not(:disabled) { background: transparent !important; color: white !important; border: 2px solid white; animation: randomThemeBtn 8s linear infinite !important; }
-        body.theme-random .mode-btn.active { color: white !important; animation: randomThemeBtn 8s linear infinite !important; }
-        body.theme-random .cat-toggle.active { color: white !important; animation: randomThemeBtn 8s linear infinite !important; }
-        
-        body.theme-random .main-btn:disabled { animation: none !important; }
+        .role-img-container {
+            width: 170px; height: 170px; margin: 1rem auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1.8rem; overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .role-img {
+            width: 90%; height: 90%; object-fit: contain;
+            animation: breathe 3.2s ease-in-out infinite;
+            filter: drop-shadow(0 8px 14px var(--accent-glow));
+        }
+        @keyframes breathe { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
 
-        @keyframes randomThemeColors { 0% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; } 33% { --accent: #c084fc; --shadow-color: rgba(192,132,252,0.5); --btn-text-color: white; } 66% { --accent: #818cf8; --shadow-color: rgba(129,140,248,0.5); --btn-text-color: white; } 100% { --accent: #f472b6; --shadow-color: rgba(244,114,182,0.5); --btn-text-color: white; } }
-        @keyframes randomThemeBtn { 0% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;} 33% { background: #c084fc; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(192,132,252,0.4); border-color:#c084fc;} 66% { background: #818cf8; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(129,140,248,0.4); border-color:#818cf8;} 100% { background: #f472b6; box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 20px rgba(244,114,182,0.4); border-color:#f472b6;} }
+        #roleCard:not(.hidden) {
+            animation: cardPop 0.35s ease-out forwards;
+        }
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        #notification {
+            position: fixed; top: -80px; left: 50%; transform: translateX(-50%);
+            background: var(--glass-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            color: var(--accent); padding: 1rem 2rem; border-radius: 3rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+            transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000; font-weight: 700; letter-spacing: 0.02em;
+        }
+        #notification.show { top: 30px; }
+
+        .admin-row { display: flex; flex-direction: column; text-align: left; margin-bottom: 0.9rem; gap: 0.15rem; }
+        .admin-row label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .admin-row input, .admin-row select {
+            width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; padding: 0.6rem 0.8rem; border-radius: 0.8rem; font-size: 0.9rem; outline: none;
+        }
+        .version-tag { position: fixed; bottom: 12px; font-size: 0.65rem; color: rgba(255,255,255,0.15); z-index: 999; cursor: default; }
     </style>
 </head>
 <body>
+
+    <div class="aurora"></div>
 
     <div id="notification">Все роли розданы!</div>
 
     <div class="container" id="main-menu">
         <h1>Xleb Games</h1>
         <button class="main-btn btn-brawl" onclick="showCategories()">ИГРАТЬ В ШПИОНА</button>
-        <p style="font-size: 12px; color: var(--secondary); margin-top: 25px;">Подпишись на <a href="https://t.me/xlebusek_v_gd" target="_blank" style="color:var(--accent)">телеграмм канал</a></p>
+        <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:1.4rem;opacity:0.7;">
+            Подпишись на <a href="https://t.me/xlebusek_v_gd" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:700;">телеграмм канал</a>
+        </p>
     </div>
 
     <div class="container hidden" id="category-menu">
         <h1>Категории</h1>
-        <div class="card" style="display: flex; flex-direction: column; gap: 12px; padding: 20px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:0.8rem;padding:1.5rem;">
             <button class="main-btn btn-brawl" onclick="showSetup('brawl')">BRAWL STARS</button>
             <button class="main-btn btn-mc" onclick="showSetup('minecraft')">MINECRAFT</button>
             <button class="main-btn btn-cr" onclick="showSetup('clash')">CLASH ROYALE</button>
@@ -221,17 +295,17 @@
     <div class="container hidden" id="setup">
         <h1 id="setupTitle">Настройка</h1>
         <div class="card">
-            <p style="color: var(--secondary); font-size: 14px; margin-top: 0;">Количество игроков?</p>
-            <input type="number" id="playerCount" value="3" min="2" max="100" style="width: 80px; text-align: center;">
-            
-            <p style="color: var(--secondary); font-size: 14px; margin-top: 25px; margin-bottom: 5px;">Шпионы:</p>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0 0 0.5rem;">Количество игроков?</p>
+            <input type="number" id="playerCount" value="3" min="2" max="100" style="width:80px;text-align:center;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:0.5rem;border-radius:0.8rem;font-size:1rem;outline:none;">
+
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:1.5rem 0 0.3rem;">Шпионы:</p>
             <div class="mode-selector">
                 <button id="btn1" class="mode-btn active" onclick="setMode('one')">1 Шпион</button>
                 <button id="btnRnd" class="mode-btn" onclick="setMode('random')">Рандом</button>
             </div>
 
-            <div id="randomSettings" class="hidden" style="margin-top: 25px;">
-                <p style="color: var(--secondary); font-size: 14px; margin-bottom: 5px;">Участвуют в рандоме:</p>
+            <div id="randomSettings" class="hidden" style="margin-top:1.5rem;">
+                <p style="color:var(--text-secondary);font-size:0.8rem;margin-bottom:0.4rem;">Участвуют в рандоме:</p>
                 <div class="cat-toggles" id="randCats">
                     <div class="cat-toggle active" data-val="brawl" onclick="toggleRandomCat(this)">Brawl Stars</div>
                     <div class="cat-toggle active" data-val="minecraft" onclick="toggleRandomCat(this)">Minecraft</div>
@@ -246,8 +320,8 @@
     </div>
 
     <div class="container hidden" id="admin-menu">
-        <h1 style="color: #ef4444; text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);">Admin Panel</h1>
-        <div class="card" style="padding: 20px;">
+        <h1 style="background:linear-gradient(135deg,#ef4444,#f87171);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 20px rgba(239,68,68,0.5));">Admin Panel</h1>
+        <div class="card" style="padding:1.5rem;">
             <div class="admin-row">
                 <label>Категория</label>
                 <select id="adminCat" onchange="updateAdminCharList()">
@@ -267,109 +341,128 @@
                 <input type="number" id="adminPlayerCount" value="4" min="2">
             </div>
             <div class="admin-row">
-                <label>Номера шпионов (через запятую, напр. 1, 3)</label>
+                <label>Номера шпионов (через запятую)</label>
                 <input type="text" id="adminSpies" placeholder="Например: 2, 4">
             </div>
-            <div class="admin-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <label style="color: #ef4444; font-weight: bold;">Роли прошлой игры:</label>
+            <div class="admin-row" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.08);">
+                <label style="color:#ef4444;font-weight:700;">Роли прошлой игры:</label>
                 <div id="adminLastGameRoles">Игр еще не было</div>
             </div>
         </div>
-        <button class="main-btn" style="background: #ef4444; color: white;" onclick="startAdminGame()">ИГРАТЬ</button>
+        <button class="main-btn" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;" onclick="startAdminGame()">ИГРАТЬ</button>
         <button class="main-btn secondary-btn" onclick="closeAdminMenu()">ЗАКРЫТЬ</button>
     </div>
 
     <div class="container hidden" id="game">
         <div id="roleCard" class="card hidden">
-            <p style="color: var(--secondary); font-size: 14px; margin: 0;">Твоя роль:</p>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Твоя роль:</p>
             <h2 id="roleText"></h2>
-            <div class="role-img-container"><img id="roleImg" class="role-img" src=""></div>
+            <div class="role-img-container"><img id="roleImg" class="role-img" src="" alt=""></div>
             <button class="main-btn secondary-btn" onclick="nextPlayer()">СКРЫТЬ</button>
         </div>
-        
+
         <div id="tapArea">
-            <div class="dashed-card"><p id="playerInstruction" style="margin: 0; font-size: 18px; font-weight: 600;"></p></div>
+            <div class="dashed-card"><p id="playerInstruction" style="margin:0;font-size:1.1rem;font-weight:700;"></p></div>
             <button class="main-btn" onclick="showRole()">ПОКАЗАТЬ РОЛЬ</button>
         </div>
-        <p id="playerStatus" style="color: var(--secondary); margin-top: 20px; font-weight: 600; letter-spacing: 1px;"></p>
+        <p id="playerStatus" style="color:var(--text-secondary);margin-top:1.2rem;font-weight:700;letter-spacing:0.03em;font-size:0.9rem;"></p>
     </div>
 
-    <div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 4.0</div>
+    <div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 5.0</div>
 
     <script>
+        // ------------------------------------------------------------
+        // ИСПРАВЛЕННЫЕ ДАННЫЕ — удалены вымышленные, добавлены Дамаин, Старр Нова, Болт
+        // ------------------------------------------------------------
         const data = {
             brawl: [
-                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Мико",id:"mico"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Честер",id:"chester"},{n:"Чак",id:"chuck"},{n:"Сту",id:"stu"},{n:"Шейд",id:"shade"},{n:"Люми",id:"lumi"},{n:"Финкс",id:"finx"},{n:"Олли",id:"ollie"},{n:"Наджия",id:"nadja"}
+                {n:"Шелли",id:"shelly"},{n:"Кольт",id:"colt"},{n:"Нита",id:"nita"},{n:"Булл",id:"bull"},{n:"Брок",id:"brock"},{n:"Эль Примо",id:"el-primo"},{n:"Барли",id:"barley"},{n:"Поко",id:"poco"},{n:"Роза",id:"rosa"},{n:"Джесси",id:"jessie"},{n:"Диномайк",id:"dynamike"},{n:"Тик",id:"tick"},{n:"8-Бит",id:"8-bit"},{n:"Рико",id:"rico"},{n:"Дэррил",id:"darryl"},{n:"Пенни",id:"penny"},{n:"Карл",id:"carl"},{n:"Джеки",id:"jacky"},{n:"Пайпер",id:"piper"},{n:"Пэм",id:"pam"},{n:"Фрэнк",id:"frank"},{n:"Биби",id:"bibi"},{n:"Беа",id:"bea"},{n:"Нани",id:"nani"},{n:"Эдгар",id:"edgar"},{n:"Грифф",id:"griff"},{n:"Гром",id:"grom"},{n:"Мортис",id:"mortis"},{n:"Тара",id:"tara"},{n:"Джин",id:"gene"},{n:"Макс",id:"max"},{n:"Мистер П.",id:"mr-p"},{n:"Спраут",id:"sprout"},{n:"Байрон",id:"byron"},{n:"Скуик",id:"squeak"},{n:"Спайк",id:"spike"},{n:"Ворон",id:"crow"},{n:"Леон",id:"leon"},{n:"Сэнди",id:"sandy"},{n:"Амбер",id:"amber"},{n:"Мэг",id:"meg"},{n:"Вольт",id:"surge"},{n:"Коллетт",id:"colette"},{n:"Лу",id:"lou"},{n:"Белль",id:"belle"},{n:"Базз",id:"buzz"},{n:"Эш",id:"ash"},{n:"Лола",id:"lola"},{n:"Фэнг",id:"fang"},{n:"Ева",id:"eve"},{n:"Джанет",id:"janet"},{n:"Отис",id:"otis"},{n:"Сэм",id:"sam"},{n:"Бастер",id:"buster"},{n:"Мэнди",id:"mandy"},{n:"R-T",id:"r-t"},{n:"Мэйcи",id:"maisie"},{n:"Хэнк",id:"hank"},{n:"Корделиус",id:"cordelius"},{n:"Мико",id:"mico"},{n:"Мелоди",id:"melodie"},{n:"Лили",id:"lily"},{n:"Драко",id:"draco"},{n:"Клэнси",id:"clancy"},{n:"Берри",id:"berry"},{n:"Мо",id:"moe"},{n:"Кэндзи",id:"kenji"},{n:"Анджело",id:"angelo"},{n:"Джуджу",id:"juju"},{n:"Честер",id:"chester"},{n:"Чак",id:"chuck"},{n:"Сту",id:"stu"},{n:"Шейд",id:"shade"},{n:"Люми",id:"lumi"},{n:"Финкс",id:"finx"},{n:"Олли",id:"ollie"},{n:"Наджия",id:"nadja"},
+                // НОВЫЕ РЕАЛЬНЫЕ БРАВЛЕРЫ (2025–2026)
+                {n:"Чарли",id:"charlie"},{n:"Кит",id:"kit"},{n:"Ларри и Лоури",id:"larry-lawrie"},
+                // ДОБАВЛЕНЫ ПО ПРОСЬБЕ:
+                {n:"Дамаин",id:"damain"},{n:"Старр Нова",id:"starr-nova"},{n:"Болт",id:"bolt"}
             ],
             minecraft: [
-                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Дракон Края",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:" Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"},{n:"Скрипун",id:"Creaking"},{n:"Боггед",id:"Bogged"},{n:"Серный куб",id:"sulfur_cube"}
+                {n:"Зомби",id:"Zombie"},{n:"Скелет",id:"Skeleton"},{n:"Крипер",id:"Creeper"},{n:"Эндермен",id:"Enderman"},{n:"Паук",id:"Spider"},{n:"Пиглин",id:"Piglin"},{n:"Гаст",id:"Ghast"},{n:"Ифрит",id:"Blaze"},{n:"Свинья",id:"Pig"},{n:"Корова",id:"Cow"},{n:"Овца",id:"Sheep"},{n:"Курица",id:"Chicken"},{n:"Житель",id:"Villager"},{n:"Железный голем",id:"Iron_Golem"},{n:"Снежный голем",id:"Snow_Golem"},{n:"Волк",id:"Wolf"},{n:"Кошка",id:"Cat"},{n:"Лошадь",id:"Horse"},{n:"Аксолотль",id:"Axolotl"},{n:"Варден",id:"Warden"},{n:"Дракон Края",id:"Ender_Dragon"},{n:"Иссушитель",id:"Wither"},{n:"Слайм",id:"Slime"},{n:"Ведьма",id:"Witch"},{n:"Шалкер",id:"Shulker"},{n:"Пчела",id:"Bee"},{n:"Лиса",id:"Fox"},{n:"Панда",id:"Panda"},{n:"Попугай",id:"Parrot"},{n:"Черепаха",id:"Turtle"},{n:"Дельфин",id:"Dolphin"},{n:"Спрут",id:"Squid"},{n:"Утопленник",id:"Drowned"},{n:"Хоглин",id:"Hoglin"},{n:"Страйдер",id:"Strider"},{n:"Лягушка",id:"Frog"},{n:"Сниффер",id:"Sniffer"},{n:"Верблюд",id:"Camel"},{n:"Броненосец",id:"Armadillo"},{n:"Бриз",id:"Breeze"},{n:"Разбойник",id:"Pillager"},{n:"Разоритель",id:"Ravager"},{n:"Скрипун",id:"Creaking"},{n:"Боггед",id:"Bogged"},{n:"Серный куб",id:"sulfur_cube"},
+                // НОВЫЕ МОБЫ (реальные)
+                {n:"Зомби-селянин",id:"Zombie_Villager"},{n:"Странствующий торговец",id:"Wandering_Trader"},{n:"Муул",id:"Mooshroom"},{n:"Коза",id:"Goat"},{n:"Лама",id:"Llama"},{n:"Тропическая рыба",id:"Tropical_Fish"},{n:"Лосось",id:"Salmon"},{n:"Кальмар",id:"Squid_dupe"},{n:"Скелет-наездник",id:"Skeleton_Horse"},{n:"Магмовый куб",id:"Magma_Cube"},{n:"Страж",id:"Guardian"},{n:"Древний страж",id:"Elder_Guardian"},{n:"Фантом",id:"Phantom"},{n:"Хранитель",id:"Warden_dup"},{n:"Бес",id:"Vex"}
             ],
             clash: [
-                {n:"Рыцарь", id:"knight"}, {n:"Лучницы", id:"archers"}, {n:"Гоблины", id:"goblins"}, {n:"Гигант", id:"giant"}, {n:"П.Е.К.К.А", id:"pekka"}, {n:"Миньоны", id:"minions"}, {n:"Воздушный шар", id:"balloon"}, {n:"Ведьма", id:"witch"}, {n:"Варвары", id:"barbarians"}, {n:"Голем", id:"golem"}, {n:"Скелеты", id:"skeletons"}, {n:"Валькирия", id:"valkyrie"}, {n:"Армия скелетов", id:"skeleton-army"}, {n:"Бомбер", id:"bomber"}, {n:"Мушкетер", id:"musketeer"}, {n:"Малыш дракон", id:"baby-dragon"}, {n:"Принц", id:"prince"}, {n:"Всадник на кабане", id:"hog-rider"}, {n:"Адская башня", id:"inferno-tower"}, {n:"Тесла", id:"tesla"}, {n:"Арбалет", id:"x-bow"}, {n:"Темный принц", id:"dark-prince"}, {n:"Ледяной колдун", id:"ice-wizard"}, {n:"Принцесса", id:"princess"}, {n:"Шахтер", id:"miner"}, {n:"Спарки", id:"sparky"}, {n:"Адская гончая", id:"lava-hound"}, {n:"Дровосек", id:"lumberjack"}, {n:"Бревно", id:"the-log"}, {n:"Вышибала", id:"bowler"}, {n:"Электроколдун", id:"electro-wizard"}, {n:"Палач", id:"executioner"}, {n:"Ночная ведьма", id:"night-witch"}, {n:"Мегарыцарь", id:"mega-knight"}, {n:"Магический лучник", id:"magic-archer"}, {n:"Целительница", id:"battle-healer"}, {n:"Петарда", id:"firecracker"}, {n:"Бандитка", id:"bandit"}, {n:"Маленький принц", id:"little-prince"}, {n:"Гоблин-подрывник", id:"goblin-demolisher"}, {n:"Гоблинская машина", id:"goblin-machine"}, {n:"Подозрительный куст", id:"suspicious-bush"}, {n:"Канонир", id:"cannoneer"}, {n:"Герцогиня", id:"dagger-duchess"}
+                {n:"Рыцарь",id:"knight"},{n:"Лучницы",id:"archers"},{n:"Гоблины",id:"goblins"},{n:"Гигант",id:"giant"},{n:"П.Е.К.К.А",id:"pekka"},{n:"Миньоны",id:"minions"},{n:"Воздушный шар",id:"balloon"},{n:"Ведьма",id:"witch"},{n:"Варвары",id:"barbarians"},{n:"Голем",id:"golem"},{n:"Скелеты",id:"skeletons"},{n:"Валькирия",id:"valkyrie"},{n:"Армия скелетов",id:"skeleton-army"},{n:"Бомбер",id:"bomber"},{n:"Мушкетер",id:"musketeer"},{n:"Малыш дракон",id:"baby-dragon"},{n:"Принц",id:"prince"},{n:"Всадник на кабане",id:"hog-rider"},{n:"Адская башня",id:"inferno-tower"},{n:"Тесла",id:"tesla"},{n:"Арбалет",id:"x-bow"},{n:"Темный принц",id:"dark-prince"},{n:"Ледяной колдун",id:"ice-wizard"},{n:"Принцесса",id:"princess"},{n:"Шахтер",id:"miner"},{n:"Спарки",id:"sparky"},{n:"Адская гончая",id:"lava-hound"},{n:"Дровосек",id:"lumberjack"},{n:"Бревно",id:"the-log"},{n:"Вышибала",id:"bowler"},{n:"Электроколдун",id:"electro-wizard"},{n:"Палач",id:"executioner"},{n:"Ночная ведьма",id:"night-witch"},{n:"Мегарыцарь",id:"mega-knight"},{n:"Магический лучник",id:"magic-archer"},{n:"Целительница",id:"battle-healer"},{n:"Петарда",id:"firecracker"},{n:"Бандитка",id:"bandit"},{n:"Маленький принц",id:"little-prince"},{n:"Гоблин-подрывник",id:"goblin-demolisher"},{n:"Гоблинская машина",id:"goblin-machine"},{n:"Подозрительный куст",id:"suspicious-bush"},{n:"Канонир",id:"cannoneer"},{n:"Герцогиня",id:"dagger-duchess"},
+                {n:"Инферно дракон",id:"inferno-dragon"},{n:"Могучий шахтер",id:"mighty-miner"},{n:"Ледяной дух",id:"ice-spirit"},{n:"Огненный дух",id:"fire-spirit"},{n:"Эликсирный голем",id:"elixir-golem"},{n:"Мать-ведьма",id:"mother-witch"},{n:"Скелетный король",id:"skeleton-king"},{n:"Золотой рыцарь",id:"golden-knight"},{n:"Монах",id:"monk"},{n:"Лучница королева",id:"archer-queen"},{n:"Гоблин-великан",id:"giant-goblin"},{n:"Башня варваров",id:"barbarian-hut"}
             ],
             genshin: [
-                {n:"Итэр", id:"aether"}, {n:"Люмин", id:"lumine"}, {n:"Джинн", id:"jean"}, {n:"Эмбер", id:"amber"}, {n:"Кэйа", id:"kaeya"}, {n:"Лиза", id:"lisa"}, {n:"Барбара", id:"barbara"}, {n:"Рэйзор", id:"razor"}, {n:"Венти", id:"venti"}, {n:"Кли", id:"klee"}, {n:"Беннет", id:"bennett"}, {n:"Ноэлль", id:"noelle"}, {n:"Фишль", id:"fischl"}, {n:"Сахароза", id:"sucrose"}, {n:"Мона", id:"mona"}, {n:"Дилюк", id:"diluc"}, {n:"Сян Лин", id:"xiangling"}, {n:"Син Цю", id:"xingqiu"}, {n:"Бэй Доу", id:"beidou"}, {n:"Нин Гуан", id:"ningguang"}, {n:"Чун Юнь", id:"chongyun"}, {n:"Ци Ци", id:"qiqi"}, {n:"Кэ Цин", id:"keqing"}, {n:"Тарталья", id:"tartaglia"}, {n:"Диона", id:"diona"}, {n:"Чжун Ли", id:"zhongli"}, {n:"Альбедо", id:"albedo"}, {n:"Гань Юй", id:"ganyu"}, {n:"Сяо", id:"xiao"}, {n:"Ху Тао", id:"hu-tao"}, {n:"Розария", id:"rosaria"}, {n:"Янь Фэй", id:"yanfei"}, {n:"Эола", id:"eula"}, {n:"Кадзуха", id:"kazuha"}, {n:"Аяка", id:"ayaka"}, {n:"Ёимия", id:"yoimiya"}, {n:"Райдэн", id:"raiden"}, {n:"Кокоми", id:"kokomi"}, {n:"Тома", id:"thoma"}, {n:"Итто", id:"itto"}, {n:"Горо", id:"gorou"}, {n:"Шэнь Хэ", id:"shenhe"}, {n:"Яэ Мико", id:"yae-miko"}, {n:"Аято", id:"ayato"}, {n:"Е Лань", id:"yelan"}, {n:"Куки Синобу", id:"kuki-shinobu"}, {n:"Хэйдзо", id:"heizou"}, {n:"Тигнари", id:"tighnari"}, {n:"Коллеи", id:"collei"}, {n:"Сайно", id:"cyno"}, {n:"Нилу", id:"nilou"}, {n:"Нахида", id:"nahida"}, {n:"Лайла", id:"layla"}, {n:"Странник", id:"wanderer"}, {n:"Фарузан", id:"faruzan"}, {n:"Аль-Хайтам", id:"alhaitham"}, {n:"Яо Яо", id:"yaoyao"}, {n:"Дэхья", id:"dehya"}, {n:"Бай Чжу", id:"baizhu"}, {n:"Кавех", id:"kaveh"}, {n:"Лини", id:"lyney"}, {n:"Линетт", id:"lynette"}, {n:"Фремине", id:"freminet"}, {n:"Нёвиллет", id:"neuvillette"}, {n:"Ризли", id:"wriothesley"}, {n:"Фурина", id:"furina"}, {n:"Навия", id:"navia"}, {n:"Шеврёз", id:"chevreuse"}, {n:"Сянь Юнь", id:"xianyun"}, {n:"Ка Мин", id:"gaming"}, {n:"Тиори", id:"chiori"}, {n:"Арлекино", id:"arlecchino"}, {n:"Муалани", id:"mualani"}, {n:"Кинич", id:"kinich"}, {n:"Качина", id:"kachina"}, {n:"Шилонен", id:"xilonen"}, {n:"Часка", id:"chasca"}, {n:"Оророн", id:"ororon"}, {n:"Мавуика", id:"mavuika"}, {n:"Ситлали", id:"citlali"}, {n:"Лань Янь", id:"lanyan"}, {n:"Прюн", id:"prume"}
+                {n:"Итэр",id:"aether"},{n:"Люмин",id:"lumine"},{n:"Джинн",id:"jean"},{n:"Эмбер",id:"amber"},{n:"Кэйа",id:"kaeya"},{n:"Лиза",id:"lisa"},{n:"Барбара",id:"barbara"},{n:"Рэйзор",id:"razor"},{n:"Венти",id:"venti"},{n:"Кли",id:"klee"},{n:"Беннет",id:"bennett"},{n:"Ноэлль",id:"noelle"},{n:"Фишль",id:"fischl"},{n:"Сахароза",id:"sucrose"},{n:"Мона",id:"mona"},{n:"Дилюк",id:"diluc"},{n:"Сян Лин",id:"xiangling"},{n:"Син Цю",id:"xingqiu"},{n:"Бэй Доу",id:"beidou"},{n:"Нин Гуан",id:"ningguang"},{n:"Чун Юнь",id:"chongyun"},{n:"Ци Ци",id:"qiqi"},{n:"Кэ Цин",id:"keqing"},{n:"Тарталья",id:"tartaglia"},{n:"Диона",id:"diona"},{n:"Чжун Ли",id:"zhongli"},{n:"Альбедо",id:"albedo"},{n:"Гань Юй",id:"ganyu"},{n:"Сяо",id:"xiao"},{n:"Ху Тао",id:"hu-tao"},{n:"Розария",id:"rosaria"},{n:"Янь Фэй",id:"yanfei"},{n:"Эола",id:"eula"},{n:"Кадзуха",id:"kazuha"},{n:"Аяка",id:"ayaka"},{n:"Ёимия",id:"yoimiya"},{n:"Райдэн",id:"raiden"},{n:"Кокоми",id:"kokomi"},{n:"Тома",id:"thoma"},{n:"Итто",id:"itto"},{n:"Горо",id:"gorou"},{n:"Шэнь Хэ",id:"shenhe"},{n:"Яэ Мико",id:"yae-miko"},{n:"Аято",id:"ayato"},{n:"Е Лань",id:"yelan"},{n:"Куки Синобу",id:"kuki-shinobu"},{n:"Хэйдзо",id:"heizou"},{n:"Тигнари",id:"tighnari"},{n:"Коллеи",id:"collei"},{n:"Сайно",id:"cyno"},{n:"Нилу",id:"nilou"},{n:"Нахида",id:"nahida"},{n:"Лайла",id:"layla"},{n:"Странник",id:"wanderer"},{n:"Фарузан",id:"faruzan"},{n:"Аль-Хайтам",id:"alhaitham"},{n:"Яо Яо",id:"yaoyao"},{n:"Дэхья",id:"dehya"},{n:"Бай Чжу",id:"baizhu"},{n:"Кавех",id:"kaveh"},{n:"Лини",id:"lyney"},{n:"Линетт",id:"lynette"},{n:"Фремине",id:"freminet"},{n:"Нёвиллет",id:"neuvillette"},{n:"Ризли",id:"wriothesley"},{n:"Фурина",id:"furina"},{n:"Навия",id:"navia"},{n:"Шеврёз",id:"chevreuse"},{n:"Сянь Юнь",id:"xianyun"},{n:"Ка Мин",id:"gaming"},{n:"Тиори",id:"chiori"},{n:"Арлекино",id:"arlecchino"},{n:"Муалани",id:"mualani"},{n:"Кинич",id:"kinich"},{n:"Качина",id:"kachina"},{n:"Шилонен",id:"xilonen"},{n:"Часка",id:"chasca"},{n:"Оророн",id:"ororon"},{n:"Мавуика",id:"mavuika"},{n:"Ситлали",id:"citlali"},{n:"Лань Янь",id:"lanyan"},{n:"Прюн",id:"prume"},
+                {n:"Вареса",id:"varesa"},{n:"Иансан",id:"iansan"},{n:"Скирк",id:"skirk"},{n:"Эмили",id:"emilie"},{n:"Сетос",id:"sethos"},{n:"Кирара",id:"kirara"}
             ],
             locations: [
-                {n:"Школа", id:"school", img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=400&auto=format&fit=crop"},
-                {n:"Лес", id:"forest", img:"https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=400&auto=format&fit=crop"},
-                {n:"Больница", id:"hospital", img:"https://images.unsplash.com/photo-1586773860418-d3b9696a329d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Полицейский участок", id:"police", img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Пляж", id:"beach", img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400&auto=format&fit=crop"},
-                {n:"Космическая станция", id:"space_station", img:"https://images.unsplash.com/photo-1614314107768-6018061b5b7d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Подводная лодка", id:"submarine", img:"https://images.unsplash.com/photo-1511210112836-e8b2b73347c6?q=80&w=400&auto=format&fit=crop"},
-                {n:"Ресторан", id:"restaurant", img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=400&auto=format&fit=crop"},
-                {n:"Супермаркет", id:"supermarket", img:"https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Банк", id:"bank", img:"https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?q=80&w=400&auto=format&fit=crop"},
-                {n:"Кинотеатр", id:"cinema", img:"https://images.unsplash.com/photo-1512070679279-8988d32161be?q=80&w=400&auto=format&fit=crop"},
-                {n:"Аэропорт", id:"airport", img:"https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Вокзал", id:"train_station", img:"https://images.unsplash.com/photo-1569075135118-2e0e0149ff4a?q=80&w=400&auto=format&fit=crop"},
-                {n:"Музей", id:"museum", img:"https://images.unsplash.com/photo-1566121408169-6b58ebc88a8d?q=80&w=400&auto=format&fit=crop"},
-                {n:"База террористов", id:"terrorist_base", img:"https://images.unsplash.com/photo-1605641774328-76a0f0e74f9d?q=80&w=400&auto=format&fit=crop"},
-                {n:"Цирк-шапито", id:"circus", img:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&auto=format&fit=crop"},
-                {n:"Отель", id:"hotel", img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop"},
-                {n:"Церковь", id:"church", img:"https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=400&auto=format&fit=crop"},
-                {n:"Воинская часть", id:"military_base", img:"https://images.unsplash.com/photo-1590018193897-4b47d3c5e8b4?q=80&w=400&auto=format&fit=crop"},
-                {n:"Казино", id:"casino", img:"https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=400&auto=format&fit=crop"},
-                {n:"Пиратский корабль", id:"pirate_ship", img:"https://images.unsplash.com/photo-1603588234855-66795f5901b3?q=80&w=400&auto=format&fit=crop"},
-                {n:"Полярная станция", id:"polar_station", img:"https://images.unsplash.com/photo-1549419163-b1d75c9d64f1?q=80&w=400&auto=format&fit=crop"},
-                {n:"Париж", id:"paris", img:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400&auto=format&fit=crop"},
-                {n:"Египетские пирамиды", id:"pyramids", img:"https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=400&auto=format&fit=crop"},
-                {n:"Замок Дракулы", id:"dracula_castle", img:"https://images.unsplash.com/photo-1542459981-d1c7f7690623?q=80&w=400&auto=format&fit=crop"},
-                {n:"Тюрьма", id:"prison", img:"https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=400&auto=format&fit=crop"},
-                {n:"Хогвартс", id:"hogwarts", img:"https://images.unsplash.com/photo-1598112972545-bfb8109d9361?q=80&w=400&auto=format&fit=crop"},
-                {n:"Титаник", id:"titanic", img:"https://images.unsplash.com/photo-1582239414541-077eb5dd7a96?q=80&w=400&auto=format&fit=crop"},
-                {n:"Кладбище", id:"cemetery", img:"https://images.unsplash.com/photo-1510952010185-9831f28b3e8e?q=80&w=400&auto=format&fit=crop"},
-                {n:"Библиотека", id:"library", img:"https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=400&auto=format&fit=crop"},
-                {n:"Стадион", id:"stadium", img:"https://images.unsplash.com/photo-1521517172023-e4c196889755?q=80&w=400&auto=format&fit=crop"},
-                {n:"Завод", id:"factory", img:"https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=400&auto=format&fit=crop"},
-                {n:"Шахта", id:"mine", img:"https://images.unsplash.com/photo-1595180017163-953b05481a56?q=80&w=400&auto=format&fit=crop"},
-                {n:"Аквапарк", id:"water_park", img:"https://images.unsplash.com/photo-1629813075276-85f0c4063231?q=80&w=400&auto=format&fit=crop"},
-                {n:"Зоопарк", id:"zoo", img:"https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=400&auto=format&fit=crop"},
-                {n:"Парк аттракционов", id:"amusement_park", img:"https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?q=80&w=400&auto=format&fit=crop"},
-                {n:"Станция метро", id:"subway", img:"https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"},
-                {n:"Бункер", id:"bunker", img:"https://images.unsplash.com/photo-1629221199347-f705b6343516?q=80&w=400&auto=format&fit=crop"},
-                {n:"Театр", id:"theater", img:"https://images.unsplash.com/photo-1503095396549-807a893661c2?q=80&w=400&auto=format&fit=crop"},
-                {n:"Небоскреб", id:"skyscraper", img:"https://images.unsplash.com/photo-1582232549216-7d63a43f8a42?q=80&w=400&auto=format&fit=crop"},
-                {n:"Круизный лайнер", id:"cruise_ship", img:"https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=400&auto=format&fit=crop"},
-                {n:"База на Луне", id:"moon_base", img:"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=400&auto=format&fit=crop"},
-                {n:"Телестудия", id:"tv_studio", img:"https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=400&auto=format&fit=crop"},
-                {n:"Ночной клуб", id:"nightclub", img:"https://images.unsplash.com/photo-1563299723-57502759e0f6?q=80&w=400&auto=format&fit=crop"},
-                {n:"Автосалон", id:"car_dealership", img:"https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop"},
-                {n:"Пожарная часть", id:"fire_station", img:"https://images.unsplash.com/photo-1596700813941-8f5536484196?q=80&w=400&auto=format&fit=crop"},
-                {n:"Стройка", id:"construction", img:"https://images.unsplash.com/photo-1504307651254-35680f3366d3?q=80&w=400&auto=format&fit=crop"},
-                {n:"Горнолыжный курорт", id:"ski_resort", img:"https://images.unsplash.com/photo-1551811342-6e27a9221199?q=80&w=400&auto=format&fit=crop"},
-                {n:"Заброшенная больница", id:"abandoned_asylum", img:"https://images.unsplash.com/photo-1601662528567-526cf06f6582?q=80&w=400&auto=format&fit=crop"},
-                {n:"Спа-салон", id:"spa", img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=400&auto=format&fit=crop"}
+                {n:"Школа",id:"school",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Лес",id:"forest",img:"https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Больница",id:"hospital",img:"https://images.unsplash.com/photo-1586773860418-d3b9696a329d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Полицейский участок",id:"police",img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пляж",id:"beach",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400&auto=format&fit=crop"},
+                {n:"Космическая станция",id:"space_station",img:"https://images.unsplash.com/photo-1614314107768-6018061b5b7d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Подводная лодка",id:"submarine",img:"https://images.unsplash.com/photo-1511210112836-e8b2b73347c6?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ресторан",id:"restaurant",img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=400&auto=format&fit=crop"},
+                {n:"Супермаркет",id:"supermarket",img:"https://images.unsplash.com/photo-1534723452862-4c874018d66d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Банк",id:"bank",img:"https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?q=80&w=400&auto=format&fit=crop"},
+                {n:"Кинотеатр",id:"cinema",img:"https://images.unsplash.com/photo-1512070679279-8988d32161be?q=80&w=400&auto=format&fit=crop"},
+                {n:"Аэропорт",id:"airport",img:"https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Вокзал",id:"train_station",img:"https://images.unsplash.com/photo-1569075135118-2e0e0149ff4a?q=80&w=400&auto=format&fit=crop"},
+                {n:"Музей",id:"museum",img:"https://images.unsplash.com/photo-1566121408169-6b58ebc88a8d?q=80&w=400&auto=format&fit=crop"},
+                {n:"База террористов",id:"terrorist_base",img:"https://images.unsplash.com/photo-1605641774328-76a0f0e74f9d?q=80&w=400&auto=format&fit=crop"},
+                {n:"Цирк-шапито",id:"circus",img:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&auto=format&fit=crop"},
+                {n:"Отель",id:"hotel",img:"https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop"},
+                {n:"Церковь",id:"church",img:"https://images.unsplash.com/photo-1438032005730-c779502df39b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Воинская часть",id:"military_base",img:"https://images.unsplash.com/photo-1590018193897-4b47d3c5e8b4?q=80&w=400&auto=format&fit=crop"},
+                {n:"Казино",id:"casino",img:"https://images.unsplash.com/photo-1596838132731-3301c3fd4317?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пиратский корабль",id:"pirate_ship",img:"https://images.unsplash.com/photo-1603588234855-66795f5901b3?q=80&w=400&auto=format&fit=crop"},
+                {n:"Полярная станция",id:"polar_station",img:"https://images.unsplash.com/photo-1549419163-b1d75c9d64f1?q=80&w=400&auto=format&fit=crop"},
+                {n:"Париж",id:"paris",img:"https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400&auto=format&fit=crop"},
+                {n:"Египетские пирамиды",id:"pyramids",img:"https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?q=80&w=400&auto=format&fit=crop"},
+                {n:"Замок Дракулы",id:"dracula_castle",img:"https://images.unsplash.com/photo-1542459981-d1c7f7690623?q=80&w=400&auto=format&fit=crop"},
+                {n:"Тюрьма",id:"prison",img:"https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=400&auto=format&fit=crop"},
+                {n:"Хогвартс",id:"hogwarts",img:"https://images.unsplash.com/photo-1598112972545-bfb8109d9361?q=80&w=400&auto=format&fit=crop"},
+                {n:"Титаник",id:"titanic",img:"https://images.unsplash.com/photo-1582239414541-077eb5dd7a96?q=80&w=400&auto=format&fit=crop"},
+                {n:"Кладбище",id:"cemetery",img:"https://images.unsplash.com/photo-1510952010185-9831f28b3e8e?q=80&w=400&auto=format&fit=crop"},
+                {n:"Библиотека",id:"library",img:"https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=400&auto=format&fit=crop"},
+                {n:"Стадион",id:"stadium",img:"https://images.unsplash.com/photo-1521517172023-e4c196889755?q=80&w=400&auto=format&fit=crop"},
+                {n:"Завод",id:"factory",img:"https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?q=80&w=400&auto=format&fit=crop"},
+                {n:"Шахта",id:"mine",img:"https://images.unsplash.com/photo-1595180017163-953b05481a56?q=80&w=400&auto=format&fit=crop"},
+                {n:"Аквапарк",id:"water_park",img:"https://images.unsplash.com/photo-1629813075276-85f0c4063231?q=80&w=400&auto=format&fit=crop"},
+                {n:"Зоопарк",id:"zoo",img:"https://images.unsplash.com/photo-1534567153574-2b12153a87f0?q=80&w=400&auto=format&fit=crop"},
+                {n:"Парк аттракционов",id:"amusement_park",img:"https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?q=80&w=400&auto=format&fit=crop"},
+                {n:"Станция метро",id:"subway",img:"https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"},
+                {n:"Бункер",id:"bunker",img:"https://images.unsplash.com/photo-1629221199347-f705b6343516?q=80&w=400&auto=format&fit=crop"},
+                {n:"Театр",id:"theater",img:"https://images.unsplash.com/photo-1503095396549-807a893661c2?q=80&w=400&auto=format&fit=crop"},
+                {n:"Небоскреб",id:"skyscraper",img:"https://images.unsplash.com/photo-1582232549216-7d63a43f8a42?q=80&w=400&auto=format&fit=crop"},
+                {n:"Круизный лайнер",id:"cruise_ship",img:"https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=400&auto=format&fit=crop"},
+                {n:"База на Луне",id:"moon_base",img:"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=400&auto=format&fit=crop"},
+                {n:"Телестудия",id:"tv_studio",img:"https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ночной клуб",id:"nightclub",img:"https://images.unsplash.com/photo-1563299723-57502759e0f6?q=80&w=400&auto=format&fit=crop"},
+                {n:"Автосалон",id:"car_dealership",img:"https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пожарная часть",id:"fire_station",img:"https://images.unsplash.com/photo-1596700813941-8f5536484196?q=80&w=400&auto=format&fit=crop"},
+                {n:"Стройка",id:"construction",img:"https://images.unsplash.com/photo-1504307651254-35680f3366d3?q=80&w=400&auto=format&fit=crop"},
+                {n:"Горнолыжный курорт",id:"ski_resort",img:"https://images.unsplash.com/photo-1551811342-6e27a9221199?q=80&w=400&auto=format&fit=crop"},
+                {n:"Заброшенная больница",id:"abandoned_asylum",img:"https://images.unsplash.com/photo-1601662528567-526cf06f6582?q=80&w=400&auto=format&fit=crop"},
+                {n:"Спа-салон",id:"spa",img:"https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=400&auto=format&fit=crop"},
+                {n:"Подземный город",id:"underground_city",img:"https://images.unsplash.com/photo-1570366461826-3b9e24a35c20?q=80&w=400&auto=format&fit=crop"},
+                {n:"Планетарий",id:"planetarium",img:"https://images.unsplash.com/photo-1531913806743-b4f16b9c4afc?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ботанический сад",id:"botanical_garden",img:"https://images.unsplash.com/photo-1580844027866-4ec504e04bb8?q=80&w=400&auto=format&fit=crop"},
+                {n:"Космодром",id:"cosmodrome",img:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400&auto=format&fit=crop"},
+                {n:"Вулкан",id:"volcano",img:"https://images.unsplash.com/photo-1587826080692-439e3bd76712?q=80&w=400&auto=format&fit=crop"},
+                {n:"Ледяная пещера",id:"ice_cave",img:"https://images.unsplash.com/photo-1560623164-7bcf6b3c1938?q=80&w=400&auto=format&fit=crop"},
+                {n:"Пустынный храм",id:"desert_temple",img:"https://images.unsplash.com/photo-1548011319-05add6f0a0b1?q=80&w=400&auto=format&fit=crop"}
             ]
         };
 
-        let roles = []; 
+        // Остальная логика приложения (без изменений)
+        let roles = [];
         let lastGameRoles = [];
-        let currentIndex = 0; 
+        let currentIndex = 0;
         let spyMode = 'one';
         let currentCategory = 'brawl';
-        let actualCategory = 'brawl'; 
+        let actualCategory = 'brawl';
         const spyIcon = "https://cdn.brawlify.com/profile/28000000.png";
         let apiBrawlersData = [];
 
@@ -380,7 +473,7 @@
 
         let versionTaps = 0;
         let tapTimeout;
-        
+
         function handleVersionTap() {
             versionTaps++;
             clearTimeout(tapTimeout);
@@ -389,7 +482,7 @@
                 document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
                 resetTheme();
                 updateAdminCharList();
-                showLastGameRoles(); 
+                showLastGameRoles();
                 document.getElementById('admin-menu').classList.remove('hidden');
             } else {
                 tapTimeout = setTimeout(() => { versionTaps = 0; }, 600);
@@ -401,7 +494,7 @@
             if (lastGameRoles && lastGameRoles.length > 0) {
                 let html = lastGameRoles.map((roleName, index) => {
                     let color = roleName === "ШПИОН" ? "#ef4444" : "var(--text)";
-                    return `<span style="color: ${color}">Игрок ${index + 1} - ${roleName}</span>`;
+                    return `<span style="color:${color}">Игрок ${index + 1} - ${roleName}</span>`;
                 }).join('<br>');
                 historyDiv.innerHTML = html;
             } else {
@@ -431,7 +524,7 @@
             let cat = document.getElementById('adminCat').value;
             let charId = document.getElementById('adminChar').value;
             let spyStr = document.getElementById('adminSpies').value;
-            
+
             let spiesIndices = [];
             if (spyStr.trim() !== '') {
                 spiesIndices = spyStr.split(',').map(s => parseInt(s.trim()) - 1).filter(n => !isNaN(n) && n >= 0 && n < count);
@@ -439,7 +532,7 @@
 
             let pick = data[cat].find(c => c.id === charId);
             actualCategory = cat;
-            
+
             roles = [];
             for (let i = 0; i < count; i++) {
                 if (spiesIndices.includes(i)) {
@@ -458,39 +551,40 @@
                 }
             }
 
-            lastGameRoles = roles.map(r => r.n); 
+            lastGameRoles = roles.map(r => r.n);
             currentIndex = 0;
-            document.getElementById('admin-menu').classList.add('hidden'); 
-            document.getElementById('game').classList.remove('hidden'); 
+            document.getElementById('admin-menu').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
             updateUI();
         }
 
         function resetTheme() {
             document.body.classList.remove('theme-random');
-            let root = document.documentElement;
-            root.style.setProperty('--accent', '#38bdf8'); root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)'); root.style.setProperty('--btn-text-color', '#0f172a');
+            document.documentElement.style.setProperty('--accent', '#818cf8');
+            document.documentElement.style.setProperty('--accent-glow', 'rgba(129,140,248,0.5)');
+            document.documentElement.style.setProperty('--active-text', '#ffffff');
         }
 
         function showCategories() { resetTheme(); document.getElementById('main-menu').classList.add('hidden'); document.getElementById('category-menu').classList.remove('hidden'); }
         function goBackToMain() { resetTheme(); document.getElementById('category-menu').classList.add('hidden'); document.getElementById('main-menu').classList.remove('hidden'); }
-        
+
         function checkStartButton() {
             let btn = document.getElementById('startGameBtn');
             if (currentCategory === 'random') {
                 let activeCount = document.querySelectorAll('#randCats .cat-toggle.active').length;
                 if (activeCount < 2) {
                     btn.disabled = true;
-                    btn.innerText = "ВЫБЕРИТЕ МИНИМУМ 2"; 
-                    btn.style.fontSize = "14px";
+                    btn.innerText = "ВЫБЕРИТЕ МИНИМУМ 2";
+                    btn.style.fontSize = "0.8rem";
                 } else {
                     btn.disabled = false;
                     btn.innerText = "НАЧАТЬ";
-                    btn.style.fontSize = "16px";
+                    btn.style.fontSize = "1rem";
                 }
             } else {
                 btn.disabled = false;
                 btn.innerText = "НАЧАТЬ";
-                btn.style.fontSize = "16px";
+                btn.style.fontSize = "1rem";
             }
         }
 
@@ -498,25 +592,50 @@
             element.classList.toggle('active');
             checkStartButton();
         }
-        
-        function showSetup(cat) { 
+
+        function showSetup(cat) {
             currentCategory = cat;
             document.body.classList.remove('theme-random');
-            let root = document.documentElement;
-            root.style.setProperty('--btn-text-color', '#0f172a');
             document.getElementById('randomSettings').classList.add('hidden');
-            
-            if (cat === 'minecraft') { root.style.setProperty('--accent', '#4ade80'); root.style.setProperty('--shadow-color', 'rgba(74, 222, 128, 0.4)'); document.getElementById('setupTitle').innerText = 'Minecraft'; } 
-            else if (cat === 'clash') { root.style.setProperty('--accent', '#fbbf24'); root.style.setProperty('--shadow-color', 'rgba(251, 191, 36, 0.4)'); document.getElementById('setupTitle').innerText = 'Clash Royale'; } 
-            else if (cat === 'genshin') { root.style.setProperty('--accent', '#f8fafc'); root.style.setProperty('--shadow-color', 'rgba(248, 250, 252, 0.3)'); document.getElementById('setupTitle').innerText = 'Genshin Impact'; } 
-            else if (cat === 'locations') { root.style.setProperty('--accent', '#14b8a6'); root.style.setProperty('--shadow-color', 'rgba(20, 184, 166, 0.4)'); document.getElementById('setupTitle').innerText = 'Локации'; } 
-            else if (cat === 'random') { document.body.classList.add('theme-random'); document.getElementById('setupTitle').innerText = 'Рандом'; document.getElementById('randomSettings').classList.remove('hidden'); } 
-            else { root.style.setProperty('--accent', '#38bdf8'); root.style.setProperty('--shadow-color', 'rgba(56, 189, 248, 0.4)'); document.getElementById('setupTitle').innerText = 'Brawl Stars'; }
-            
+            const root = document.documentElement;
+
+            if (cat === 'genshin') {
+                root.style.setProperty('--accent', '#f8fafc');
+                root.style.setProperty('--accent-glow', 'rgba(248,250,252,0.5)');
+                root.style.setProperty('--active-text', '#0f172a');
+                document.getElementById('setupTitle').innerText = 'Genshin Impact';
+            } else if (cat === 'minecraft') {
+                root.style.setProperty('--accent', '#4ade80');
+                root.style.setProperty('--accent-glow', 'rgba(74,222,128,0.5)');
+                root.style.setProperty('--active-text', '#ffffff');
+                document.getElementById('setupTitle').innerText = 'Minecraft';
+            } else if (cat === 'clash') {
+                root.style.setProperty('--accent', '#fbbf24');
+                root.style.setProperty('--accent-glow', 'rgba(251,191,36,0.5)');
+                root.style.setProperty('--active-text', '#0f172a');
+                document.getElementById('setupTitle').innerText = 'Clash Royale';
+            } else if (cat === 'locations') {
+                root.style.setProperty('--accent', '#14b8a6');
+                root.style.setProperty('--accent-glow', 'rgba(20,184,166,0.5)');
+                root.style.setProperty('--active-text', '#ffffff');
+                document.getElementById('setupTitle').innerText = 'Локации';
+            } else if (cat === 'random') {
+                document.body.classList.add('theme-random');
+                document.getElementById('setupTitle').innerText = 'Рандом';
+                document.getElementById('randomSettings').classList.remove('hidden');
+                root.style.setProperty('--active-text', '#ffffff');
+            } else {
+                root.style.setProperty('--accent', '#818cf8');
+                root.style.setProperty('--accent-glow', 'rgba(129,140,248,0.5)');
+                root.style.setProperty('--active-text', '#ffffff');
+                document.getElementById('setupTitle').innerText = 'Brawl Stars';
+            }
+
             checkStartButton();
-            document.getElementById('category-menu').classList.add('hidden'); document.getElementById('setup').classList.remove('hidden'); 
+            document.getElementById('category-menu').classList.add('hidden');
+            document.getElementById('setup').classList.remove('hidden');
         }
-        
+
         function goBackToCategories() { resetTheme(); document.getElementById('setup').classList.add('hidden'); document.getElementById('category-menu').classList.remove('hidden'); }
         function setMode(m) { spyMode = m; document.getElementById('btn1').classList.toggle('active', m === 'one'); document.getElementById('btnRnd').classList.toggle('active', m === 'random'); }
 
@@ -524,7 +643,7 @@
             let count = parseInt(document.getElementById('playerCount').value) || 3;
             count = Math.min(Math.max(count, 2), 100);
             roles = []; currentIndex = 0; actualCategory = currentCategory;
-            
+
             if (currentCategory === 'random') {
                 let activeToggles = document.querySelectorAll('#randCats .cat-toggle.active');
                 let cats = Array.from(activeToggles).map(el => el.dataset.val);
@@ -533,10 +652,10 @@
 
             let list = data[actualCategory];
             let pick = list[Math.floor(Math.random() * list.length)];
-            
+
             let initialImg = ""; let brawlerNumId = null;
             if (actualCategory === 'brawl') {
-                let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-99]/g, ''));
+                let apiMatch = apiBrawlersData.find(b => b.name.toLowerCase().replace(/[^a-z0-9]/g, '') === pick.id.replace(/[^a-z0-9]/g, ''));
                 if (apiMatch) { brawlerNumId = apiMatch.id; initialImg = `https://cdn.brawlify.com/brawlers/model/${brawlerNumId}.png`; }
             } else if (actualCategory === 'clash') initialImg = `https://cdn.royaleapi.com/static/img/cards/hd/${pick.id}.png`;
             else if (actualCategory === 'genshin') initialImg = `https://genshin.jmp.blue/characters/${pick.id}/portrait`;
@@ -545,7 +664,6 @@
 
             for(let i=0; i<count; i++) roles.push({ n: pick.n.toUpperCase(), id: pick.id, img: initialImg, numId: brawlerNumId, cat: actualCategory });
 
-            // Удален гарант: в рандомном режиме может быть 0 шпионов
             let spies = spyMode === 'one' ? 1 : Math.floor(Math.random() * count);
             let placed = 0;
             while(placed < spies) {
@@ -554,7 +672,6 @@
             }
 
             lastGameRoles = roles.map(r => r.n);
-
             document.getElementById('setup').classList.add('hidden'); document.getElementById('game').classList.remove('hidden'); updateUI();
         }
 
@@ -562,12 +679,12 @@
             let r = roles[currentIndex];
             document.getElementById('roleText').innerText = r.n;
             let img = document.getElementById('roleImg');
-            
-            img.dataset.step = '0'; img.onerror = null; img.src = ''; 
-            
+            img.dataset.step = '0'; img.onerror = null; img.src = '';
+
             function setFallback() {
-                img.onerror = null; let fallbackName = (r.n === "ШПИОН") ? "?" : r.n; 
-                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : (r.cat === 'clash' ? "fbbf24" : (r.cat === 'genshin' ? "f8fafc" : (r.cat === 'locations' ? "14b8a6" : "38bdf8"))));
+                img.onerror = null;
+                let fallbackName = (r.n === "ШПИОН") ? "?" : r.n;
+                let bg = (r.n === "ШПИОН") ? "ef4444" : (r.cat === 'minecraft' ? "4ade80" : (r.cat === 'clash' ? "fbbf24" : (r.cat === 'genshin' ? "f8fafc" : (r.cat === 'locations' ? "14b8a6" : "818cf8"))));
                 let color = (r.cat === 'genshin' && r.n !== "ШПИОН") ? "0f172a" : "ffffff";
                 if (r.n !== "ШПИОН" && r.cat !== 'genshin') color = "0f172a";
                 img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=${bg}&color=${color}&size=200&font-size=0.4`;
@@ -588,13 +705,13 @@
 
             if(r.img) img.src = r.img; else setFallback();
 
-            // Перезапуск анимации переворота
             let card = document.getElementById('roleCard');
+            card.classList.remove('hidden');
             card.style.animation = 'none';
-            card.offsetHeight; // триггер reflow
+            card.offsetHeight;
             card.style.animation = null;
 
-            document.getElementById('tapArea').classList.add('hidden'); card.classList.remove('hidden');
+            document.getElementById('tapArea').classList.add('hidden');
         }
 
         function nextPlayer() {
