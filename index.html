@@ -272,7 +272,13 @@
         .rules-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
         .rules-content { background: #0f0f23; border: 1px solid rgba(255,255,255,0.2); border-radius: 1.8rem; padding: 2rem; max-width: 400px; text-align: left; color: #e0e7ff; }
         .rules-content h3 { color: #f97316; margin-top: 0; }
-        @keyframes cardPop { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+        
+        /* Смягченная анимация для появления карточки */
+        @keyframes cardPop { 
+            0% { opacity: 0; transform: translateY(15px) scale(0.95); } 
+            100% { opacity: 1; transform: translateY(0) scale(1); } 
+        }
+        
         /* Улучшение прокрутки на экране выбора игрока */
         #monkey-view-player {
             max-height: 95vh;
@@ -298,7 +304,6 @@
 <div class="aurora"></div>
 <div id="notification">Все роли розданы!</div>
 
-<!-- Главное меню -->
 <div class="container" id="main-menu">
     <h1>Xleb Games</h1>
     <button class="main-btn btn-brawl" onclick="showCategories()">ИГРАТЬ В ШПИОНА</button>
@@ -308,7 +313,6 @@
     </p>
 </div>
 
-<!-- Категории шпиона -->
 <div class="container hidden" id="category-menu">
     <h1>Категории</h1>
     <div class="card" style="display:flex;flex-direction:column;gap:0.8rem;padding:1.5rem;">
@@ -322,7 +326,6 @@
     <button class="main-btn secondary-btn" onclick="goBackToMain()">НАЗАД</button>
 </div>
 
-<!-- Настройка шпиона -->
 <div class="container hidden" id="setup">
     <h1 id="setupTitle">Настройка</h1>
     <div class="card">
@@ -348,7 +351,6 @@
     <button class="main-btn secondary-btn" onclick="goBackToCategories()">НАЗАД</button>
 </div>
 
-<!-- Игра шпион -->
 <div class="container hidden" id="game">
     <div id="roleCard" class="card hidden">
         <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Твоя роль:</p>
@@ -363,7 +365,6 @@
     <p id="playerStatus" style="color:var(--text-secondary);margin-top:1.2rem;font-weight:700;letter-spacing:0.03em;font-size:0.9rem;"></p>
 </div>
 
-<!-- Настройка обезьянки -->
 <div class="container hidden" id="monkey-setup">
     <h1 style="color:#f97316; filter:drop-shadow(0 0 20px var(--monkey-glow)); background: none; -webkit-text-fill-color: #f97316;">Обезьянка</h1>
     <div class="card">
@@ -386,7 +387,6 @@
     <button class="main-btn secondary-btn" onclick="goBackFromMonkeySetup()">НАЗАД</button>
 </div>
 
-<!-- Выдача ролей обезьянки -->
 <div class="container hidden" id="monkey-deal">
     <div id="monkeyRoleCard" class="card hidden">
         <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">Твои действия:</p>
@@ -396,12 +396,10 @@
     <div id="monkeyTapArea">
         <div class="dashed-card"><p id="monkeyPlayerInstruction" style="margin:0;font-size:1.1rem;font-weight:700;"></p></div>
         <button class="main-btn btn-monkey" onclick="showMonkeyRole()">УЗНАТЬ ДЕЙСТВИЯ</button>
-        <!-- Кнопка "Выйти" убрана для избежания случайного нажатия -->
     </div>
     <p id="monkeyPlayerStatus" style="color:var(--text-secondary);margin-top:1.2rem;font-weight:700;letter-spacing:0.03em;font-size:0.9rem;"></p>
 </div>
 
-<!-- Экран игры обезьянки -->
 <div class="container hidden" id="monkey-game">
     <h2 style="color:#f97316; text-shadow:0 0 20px var(--monkey-glow);">Обезьянка</h2>
     <div id="monkeyActionDisplay" class="monkey-action-display hidden"></div>
@@ -411,7 +409,6 @@
     <button class="main-btn secondary-btn" onclick="endMonkeyGame()">ЗАВЕРШИТЬ ИГРУ</button>
 </div>
 
-<!-- Выбор игрока для просмотра действий -->
 <div class="container hidden" id="monkey-view-player">
     <h2 style="color:#f97316; margin-top:0.5rem;">Выбери игрока</h2>
     <div class="monkey-player-scroll" id="monkeyPlayerGrid"></div>
@@ -423,7 +420,6 @@
     <button class="main-btn secondary-btn" onclick="closePlayerView()">НАЗАД В ИГРУ</button>
 </div>
 
-<!-- Админка -->
 <div class="container hidden" id="admin-menu">
     <h1 style="background:linear-gradient(135deg,#ef4444,#f87171);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 20px rgba(239,68,68,0.5));">Admin Panel</h1>
     <div class="card" style="padding:1.5rem;">
@@ -455,7 +451,7 @@
             {n:"Инферно дракон",id:"inferno-dragon"},{n:"Могучий шахтер",id:"mighty-miner"},{n:"Ледяной дух",id:"ice-spirit"},{n:"Огненный дух",id:"fire-spirit"},{n:"Эликсирный голем",id:"elixir-golem"},{n:"Мать-ведьма",id:"mother-witch"},{n:"Скелетный король",id:"skeleton-king"},{n:"Золотой рыцарь",id:"golden-knight"},{n:"Монах",id:"monk"},{n:"Лучница королева",id:"archer-queen"},{n:"Гоблин-великан",id:"giant-goblin"},{n:"Башня варваров",id:"barbarian-hut"}
         ],
         genshin: [
-            {n:"Итэр",id:"aether"},{n:"Люмин",id:"lumine"},{n:"Джинн",id:"jean"},{n:"Эмбер",id:"amber"},{n:"Кэйа",id:"kaeya"},{n:"Лиза",id:"lisa"},{n:"Барбара",id:"barbara"},{n:"Рэйзор",id:"razor"},{n:"Венти",id:"venti"},{n:"Кли",id:"klee"},{n:"Беннет",id:"bennett"},{n:"Ноэлль",id:"noelle"},{n:"Фишль",id:"fischl"},{n:"Сахароза",id:"sucrose"},{n:"Мона",id:"mona"},{n:"Дилюк",id:"diluc"},{n:"Сян Лин",id:"xiangling"},{n:"Син Цю",id:"xingqiu"},{n:"Бэй Доу",id:"beidou"},{n:"Нин Гуан",id:"ningguang"},{n:"Чун Юнь",id:"chongyun"},{n:"Ци Ци",id:"qiqi"},{n:"Кэ Цин",id:"keqing"},{n:"Тарталья",id:"tartaglia"},{n:"Диона",id:"diona"},{n:"Чжун Ли",id:"zhongli"},{n:"Альбедо",id:"albedo"},{n:"Гань Юй",id:"ganyu"},{n:"Сяо",id:"xiao"},{n:"Ху Тао",id:"hu-tao"},{n:"Розария",id:"rosaria"},{n:"Янь Фэй",id:"yanfei"},{n:"Эола",id:"eula"},{n:"Кадзуха",id:"kazuha"},{n:"Аяка",id:"ayaka"},{n:"Ёимия",id:"yoimiya"},{n:"Райдэн",id:"raiden"},{n:"Кокоми",id:"kokomi"},{n:"Тома",id:"thoma"},{n:"Итто",id:"itto"},{n:"Горо",id:"gorou"},{n:"Шэнь Хэ",id:"shenhe"},{n:"Яэ Мико",id:"yae-miko"},{n:"Аято",id:"ayato"},{n:"Е Лань",id:"yelan"},{n:"Куки Синобу",id:"kuki-shinobu"},{n:"Хэйдзо",id:"heizou"},{n:"Тигнари",id:"tighnari"},{n:"Коллеи",id:"collei"},{n:"Сайно",id:"cyno"},{n:"Нилу",id:"nilou"},{n:"Нахида",id:"nahida"},{n:"Лайла",id:"layla"},{n:"Странник",id:"wanderer"},{n:"Фарузан",id:"faruzan"},{n:"Аль-Хайтам",id:"alhaitham"},{n:"Яо Яо",id:"yaoyao"},{n:"Дэхья",id:"dehya"},{n:"Бай Чжу",id:"baizhu"},{n:"Кавех",id:"kaveh"},{n:"Лини",id:"lyney"},{n:"Линетт",id:"lynette"},{n:"Фремине",id:"freminet"},{n:"Нёвиллет",id:"neuvillette"},{n:"Ризли",id:"wriothesley"},{n:"Фурина",id:"furina"},{n:"Навия",id:"navia"},{n:"Шеврёз",id:"chevreuse"},{n:"Сянь Юнь",id:"xianyun"},{n:"Ка Мин",id:"gaming"},{n:"Тиори",id:"chiori"},{n:"Арлекино",id:"arlecchino"},{n:"Муалани",id:"mualani"},{n:"Кинич",id:"kinich"},{n:"Качина",id:"kachina"},{n:"Шилонен",id:"xilonen"},{n:"Часка",id:"chasca"},{n:"Оророн",id:"ororon"},{n:"Мавуика",id:"mavuika"},{n:"Ситлали",id:"citlali"},{n:"Лань Янь",id:"lanyan"},{n:"Прюн",id:"prume"},
+            {n:"Итэр",id:"aether"},{n:"Люмин",id:"lumine"},{n:"Джинн",id:"jean"},{n:"Эмбер",id:"amber"},{n:"Кэйа",id:"kaeya"},{n:"Лиза",id:"lisa"},{n:"Барбара",id:"barbara"},{n:"Рэйзор",id:"razor"},{n:"Венти",id:"venti"},{n:"Кли",id:"klee"},{n:"Беннет",id:"ноэлль",id:"noelle"},{n:"Фишль",id:"fischl"},{n:"Сахароза",id:"sucrose"},{n:"Мона",id:"mona"},{n:"Дилюк",id:"diluc"},{n:"Сян Лин",id:"xiangling"},{n:"Син Цю",id:"xingqiu"},{n:"Бэй Доу",id:"beidou"},{n:"Нин Гуан",id:"ningguang"},{n:"Чун Юнь",id:"chongyun"},{n:"Ци Ци",id:"qiqi"},{n:"Кэ Цин",id:"keqing"},{n:"Тарталья",id:"tartaglia"},{n:"Диона",id:"diona"},{n:"Чжун Ли",id:"zhongli"},{n:"Альбедо",id:"albedo"},{n:"Гань Юй",id:"ganyu"},{n:"Сяо",id:"xiao"},{n:"Ху Тао",id:"hu-tao"},{n:"Розария",id:"rosaria"},{n:"Янь Фэй",id:"yanfei"},{n:"Эола",id:"eula"},{n:"Кадзуха",id:"kazuha"},{n:"Аяка",id:"ayaka"},{n:"Ёимия",id:"yoimiya"},{n:"Райдэн",id:"raiden"},{n:"Кокоми",id:"kokomi"},{n:"Тома",id:"thoma"},{n:"Итто",id:"itto"},{n:"Горо",id:"gorou"},{n:"Шэнь Хэ",id:"shenhe"},{n:"Яэ Мико",id:"yae-miko"},{n:"Аято",id:"ayato"},{n:"Е Лань",id:"yelan"},{n:"Куки Синобу",id:"kuki-shinobu"},{n:"Хэйдзо",id:"heizou"},{n:"Тигнари",id:"tighnari"},{n:"Коллеи",id:"collei"},{n:"Сайно",id:"cyno"},{n:"Нилу",id:"nilou"},{n:"Нахида",id:"nahida"},{n:"Лайла",id:"layla"},{n:"Странник",id:"wanderer"},{n:"Фарузан",id:"faruzan"},{n:"Аль-Хайтам",id:"alhaitham"},{n:"Яо Яо",id:"yaoyao"},{n:"Дэхья",id:"dehya"},{n:"Бай Чжу",id:"baizhu"},{n:"Кавех",id:"kaveh"},{n:"Лини",id:"lyney"},{n:"Линетт",id:"lynette"},{n:"Фремине",id:"freminet"},{n:"Нёвиллет",id:"neuvillette"},{n:"Ризли",id:"wriothesley"},{n:"Фурина",id:"furina"},{n:"Навия",id:"navia"},{n:"Шеврёз",id:"chevreuse"},{n:"Сянь Юнь",id:"xianyun"},{n:"Ка Мин",id:"gaming"},{n:"Тиори",id:"chiori"},{n:"Арлекино",id:"arlecchino"},{n:"Муалани",id:"mualani"},{n:"Кинич",id:"kinich"},{n:"Качина",id:"kachina"},{n:"Шилонен",id:"xilonen"},{n:"Часка",id:"chasca"},{n:"Оророн",id:"ororon"},{n:"Мавуика",id:"mavuika"},{n:"Ситлали",id:"citlali"},{n:"Лань Янь",id:"lanyan"},{n:"Прюн",id:"prume"},
             {n:"Вареса",id:"varesa"},{n:"Иансан",id:"iansan"},{n:"Скирк",id:"skirk"},{n:"Эмили",id:"emilie"},{n:"Сетос",id:"sethos"},{n:"Кирара",id:"kirara"}
         ],
         locations: [
@@ -660,7 +656,7 @@
         card.classList.remove('hidden');
         card.style.animation = 'none';
         card.offsetHeight;
-        card.style.animation = 'cardPop 0.35s ease-out forwards';
+        card.style.animation = 'cardPop 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards';
         document.getElementById('monkeyTapArea').classList.add('hidden');
     }
 
@@ -1037,8 +1033,8 @@
         let card = document.getElementById('roleCard');
         card.classList.remove('hidden');
         card.style.animation = 'none';
-        card.offsetHeight;
-        card.style.animation = null;
+        card.offsetHeight; // Принудительный reflow для перезапуска анимации
+        card.style.animation = 'cardPop 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards';
         document.getElementById('tapArea').classList.add('hidden');
     }
 
