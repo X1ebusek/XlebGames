@@ -18,6 +18,8 @@
             --transition: 0.25s ease-out;
             --monkey-accent: #f97316;
             --monkey-glow: rgba(249, 115, 22, 0.55);
+            --bomb-accent: #ef4444;
+            --bomb-glow: rgba(239, 68, 68, 0.55);
         }
         * {
             -webkit-tap-highlight-color: transparent;
@@ -167,6 +169,8 @@
         .btn-locations { background: linear-gradient(135deg, #14b8a6, #0d9488) !important; box-shadow: 0 6px 20px rgba(20,184,166,0.55) !important; }
         .btn-random { background: linear-gradient(135deg, #f472b6, #c084fc, #818cf8, #f472b6) !important; background-size: 300% 100% !important; animation: rainbowBtn 3s linear infinite !important; box-shadow: 0 6px 20px rgba(192,132,252,0.55) !important; }
         .btn-monkey { background: linear-gradient(135deg, #f97316, #ea580c) !important; box-shadow: 0 6px 22px var(--monkey-glow) !important; }
+        .btn-bomb { background: linear-gradient(135deg, #ef4444, #dc2626) !important; box-shadow: 0 6px 20px rgba(239,68,68,0.55) !important; }
+
         @keyframes rainbowBtn { 0%{background-position:0% 50%;} 100%{background-position:100% 50%;} }
         .mode-selector { display: flex; gap: 0.6rem; margin-top: 0.8rem; width: 100%; }
         .mode-btn {
@@ -272,13 +276,46 @@
         .rules-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
         .rules-content { background: #0f0f23; border: 1px solid rgba(255,255,255,0.2); border-radius: 1.8rem; padding: 2rem; max-width: 400px; text-align: left; color: #e0e7ff; }
         .rules-content h3 { color: #f97316; margin-top: 0; }
-        
-        /* Смягченная анимация для появления карточки */
-        @keyframes cardPop { 
-            0% { opacity: 0; transform: translateY(15px) scale(0.95); } 
-            100% { opacity: 1; transform: translateY(0) scale(1); } 
+
+        /* Стили для Бомбы */
+        .bomb-icon {
+            font-size: 5rem;
+            margin: 1rem 0;
+            animation: bombPulse 0.4s infinite alternate;
         }
-        
+        @keyframes bombPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(239,68,68,0.6)); }
+            100% { transform: scale(1.15); filter: drop-shadow(0 0 30px rgba(239,68,68,1)); }
+        }
+        .bomb-task {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            min-height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 0 0 10px rgba(239,68,68,0.6);
+        }
+        .bomb-explosion {
+            font-size: 6rem;
+            margin: 1rem 0;
+            animation: explosionShake 0.8s ease-out;
+        }
+        @keyframes explosionShake {
+            0% { transform: scale(0.2) rotate(0deg); opacity: 0; }
+            40% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+            70% { transform: scale(0.9) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Смягченная анимация для появления карточки */
+        @keyframes cardPop {
+            0% { opacity: 0; transform: translateY(15px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         /* Улучшение прокрутки на экране выбора игрока */
         #monkey-view-player {
             max-height: 95vh;
@@ -298,6 +335,10 @@
             overflow-y: auto;
             max-height: none;
         }
+
+        .bomb-rules-btn {
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 <body>
@@ -308,6 +349,7 @@
     <h1>Xleb Games</h1>
     <button class="main-btn btn-brawl" onclick="showCategories()">ИГРАТЬ В ШПИОНА</button>
     <button class="main-btn btn-monkey" onclick="showMonkeySetup()">ИГРАТЬ В ОБЕЗЬЯНКУ</button>
+    <button class="main-btn btn-bomb" onclick="showBombSetup()">ИГРАТЬ В БОМБУ</button>
     <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:1.4rem;opacity:0.7;">
         Подпишись на <a href="https://t.me/xlebusek_v_gd" target="_blank" style="color:var(--accent);text-decoration:none;font-weight:700;">телеграмм канал</a>
     </p>
@@ -420,6 +462,46 @@
     <button class="main-btn secondary-btn" onclick="closePlayerView()">НАЗАД В ИГРУ</button>
 </div>
 
+<div class="container hidden" id="bomb-setup">
+    <h1 style="color:#ef4444; filter:drop-shadow(0 0 20px rgba(239,68,68,0.5)); background: none; -webkit-text-fill-color: #ef4444;">Бомба</h1>
+    <div class="card">
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;line-height:1.4;">
+            Таймер взорвётся в случайный момент между заданными значениями.
+        </p>
+        <div class="monkey-input-group">
+            <label style="color:var(--text-secondary);font-size:0.85rem;">Мин. время (сек)</label>
+            <input type="number" id="bombMinTime" value="20" min="5" max="120" oninput="validateBombInputs()">
+        </div>
+        <div class="monkey-input-group">
+            <label style="color:var(--text-secondary);font-size:0.85rem;">Макс. время (сек)</label>
+            <input type="number" id="bombMaxTime" value="45" min="10" max="300" oninput="validateBombInputs()">
+        </div>
+        <button class="main-btn secondary-btn bomb-rules-btn" onclick="showBombRules()">ПРАВИЛА</button>
+    </div>
+    <button id="startBombBtn" class="main-btn btn-bomb" onclick="startBombGame()">ЗАПУСТИТЬ БОМБУ</button>
+    <button class="main-btn secondary-btn" onclick="goBackFromBombSetup()">НАЗАД</button>
+</div>
+
+<div class="container hidden" id="bomb-game">
+    <h2 style="color:#ef4444; text-shadow:0 0 20px rgba(239,68,68,0.5);">Бомба</h2>
+    <div class="card" id="bombLiveArea">
+        <div class="bomb-task" id="bombTaskText">Назови слово на букву А</div>
+        <div class="bomb-icon">💣</div>
+        <p style="color:var(--text-secondary);font-size:0.85rem;margin:0;">
+            Передавайте устройство друг другу, пока таймер не истечёт.
+        </p>
+    </div>
+    <div class="card hidden" id="bombExplodedArea">
+        <div class="bomb-explosion">💥</div>
+        <h2 style="color:#ef4444; margin-bottom: 0.5rem;">Бомба взорвалась!</h2>
+        <p style="font-size: 1rem; font-weight: bold; color: var(--text-secondary);">
+            Тот, у кого в руках устройство — проиграл!
+        </p>
+        <button class="main-btn btn-bomb" style="margin-top:1.5rem;" onclick="resetBombGame()">НОВАЯ ИГРА</button>
+    </div>
+    <button class="main-btn secondary-btn" style="margin-top:0.5rem;" onclick="endBombGame()">ЗАВЕРШИТЬ ИГРУ</button>
+</div>
+
 <div class="container hidden" id="admin-menu">
     <h1 style="background:linear-gradient(135deg,#ef4444,#f87171);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 0 20px rgba(239,68,68,0.5));">Admin Panel</h1>
     <div class="card" style="padding:1.5rem;">
@@ -433,7 +515,7 @@
     <button class="main-btn secondary-btn" onclick="closeAdminMenu()">ЗАКРЫТЬ</button>
 </div>
 
-<div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 6.0</div>
+<div class="version-tag" id="versionTag" onclick="handleVersionTap()">Версия 7.0</div>
 
 <script>
     // ================== ДАННЫЕ ==================
@@ -452,7 +534,7 @@
         ],
         genshin: [
             {n:"Итэр",id:"aether"},{n:"Люмин",id:"lumine"},{n:"Джинн",id:"jean"},{n:"Эмбер",id:"amber"},{n:"Кэйа",id:"kaeya"},{n:"Лиза",id:"lisa"},{n:"Барбара",id:"barbara"},{n:"Рэйзор",id:"razor"},{n:"Венти",id:"venti"},{n:"Кли",id:"klee"},{n:"Беннет",id:"ноэлль",id:"noelle"},{n:"Фишль",id:"fischl"},{n:"Сахароза",id:"sucrose"},{n:"Мона",id:"mona"},{n:"Дилюк",id:"diluc"},{n:"Сян Лин",id:"xiangling"},{n:"Син Цю",id:"xingqiu"},{n:"Бэй Доу",id:"beidou"},{n:"Нин Гуан",id:"ningguang"},{n:"Чун Юнь",id:"chongyun"},{n:"Ци Ци",id:"qiqi"},{n:"Кэ Цин",id:"keqing"},{n:"Тарталья",id:"tartaglia"},{n:"Диона",id:"diona"},{n:"Чжун Ли",id:"zhongli"},{n:"Альбедо",id:"albedo"},{n:"Гань Юй",id:"ganyu"},{n:"Сяо",id:"xiao"},{n:"Ху Тао",id:"hu-tao"},{n:"Розария",id:"rosaria"},{n:"Янь Фэй",id:"yanfei"},{n:"Эола",id:"eula"},{n:"Кадзуха",id:"kazuha"},{n:"Аяка",id:"ayaka"},{n:"Ёимия",id:"yoimiya"},{n:"Райдэн",id:"raiden"},{n:"Кокоми",id:"kokomi"},{n:"Тома",id:"thoma"},{n:"Итто",id:"itto"},{n:"Горо",id:"gorou"},{n:"Шэнь Хэ",id:"shenhe"},{n:"Яэ Мико",id:"yae-miko"},{n:"Аято",id:"ayato"},{n:"Е Лань",id:"yelan"},{n:"Куки Синобу",id:"kuki-shinobu"},{n:"Хэйдзо",id:"heizou"},{n:"Тигнари",id:"tighnari"},{n:"Коллеи",id:"collei"},{n:"Сайно",id:"cyno"},{n:"Нилу",id:"nilou"},{n:"Нахида",id:"nahida"},{n:"Лайла",id:"layla"},{n:"Странник",id:"wanderer"},{n:"Фарузан",id:"faruzan"},{n:"Аль-Хайтам",id:"alhaitham"},{n:"Яо Яо",id:"yaoyao"},{n:"Дэхья",id:"dehya"},{n:"Бай Чжу",id:"baizhu"},{n:"Кавех",id:"kaveh"},{n:"Лини",id:"lyney"},{n:"Линетт",id:"lynette"},{n:"Фремине",id:"freminet"},{n:"Нёвиллет",id:"neuvillette"},{n:"Ризли",id:"wriothesley"},{n:"Фурина",id:"furina"},{n:"Навия",id:"navia"},{n:"Шеврёз",id:"chevreuse"},{n:"Сянь Юнь",id:"xianyun"},{n:"Ка Мин",id:"gaming"},{n:"Тиори",id:"chiori"},{n:"Арлекино",id:"arlecchino"},{n:"Муалани",id:"mualani"},{n:"Кинич",id:"kinich"},{n:"Качина",id:"kachina"},{n:"Шилонен",id:"xilonen"},{n:"Часка",id:"chasca"},{n:"Оророн",id:"ororon"},{n:"Мавуика",id:"mavuika"},{n:"Ситлали",id:"citlali"},{n:"Лань Янь",id:"lanyan"},{n:"Прюн",id:"prume"},
-            {n:"Вареса",id:"varesa"},{n:"Иансан",id:"iansan"},{n:"Скирк",id:"skirk"},{n:"Эмили",id:"emilie"},{n:"Сетос",id:"sethos"},{n:"Кирара",id:"kirara"}
+            {n:"Вареса",id:"varesa"},{n:"Иансан",id:"iansan"},{n:"Скирк",id:"emilie",id:"emilie"},{n:"Сетос",id:"sethos"},{n:"Кирара",id:"kirara"}
         ],
         locations: [
             {n:"Школа",id:"school",img:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=400&auto=format&fit=crop"},
@@ -515,6 +597,19 @@
         ]
     };
 
+    // ================== ДАННЫЕ БОМБЫ ==================
+    const bombTasks = [
+        "Назови марку автомобиля", "Назови фрукт", "Назови страну", "Назови город на букву А",
+        "Назови животное из Африки", "Назови цвет", "Назови бренд одежды", "Назови профессию",
+        "Назови музыкальный инструмент", "Назови овощ", "Назови предмет мебели", "Назови вид спорта",
+        "Назови школьный предмет", "Назови напиток", "Назови имя на букву М", "Назови породу собаки",
+        "Назови фильм", "Назови супергероя", "Назови инструмент (молоток и тд)", "Назови птицу",
+        "Назови рыбу", "Назови валюту", "Назови язык", "Назови сладость", "Назови часть тела",
+        "Назови марку телефона", "Назови настольную игру", "Назови персонажа видеоигры"
+    ];
+    let bombTimer;
+    let bombTimeRemaining = 0;
+
     // ================== ПЕРЕМЕННЫЕ ШПИОНА ==================
     let roles = [];
     let lastGameRoles = [];
@@ -555,6 +650,104 @@
         "Открывать дверь", "Завязывать шнурки", "Мыть окно", "Гладить кошку",
         "Стрелять из лука", "Печатать на клавиатуре", "Петь в душе"
     ];
+
+    // ================== ФУНКЦИИ БОМБЫ ==================
+
+    function validateBombInputs() {
+        const min = parseInt(document.getElementById('bombMinTime').value) || 0;
+        const max = parseInt(document.getElementById('bombMaxTime').value) || 0;
+        const btn = document.getElementById('startBombBtn');
+        if (min > max) {
+            btn.disabled = true;
+            btn.innerText = 'МИНИМУМ НЕ МОЖЕТ БЫТЬ БОЛЬШЕ МАКСИМУМА';
+        } else {
+            btn.disabled = false;
+            btn.innerText = 'ЗАПУСТИТЬ БОМБУ';
+        }
+    }
+
+    function showBombSetup() {
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('bomb-game').classList.add('hidden');
+        document.getElementById('bomb-setup').classList.remove('hidden');
+        document.documentElement.style.setProperty('--accent', '#ef4444');
+        document.documentElement.style.setProperty('--accent-glow', 'rgba(239,68,68,0.5)');
+        // Сброс таймера, если он был запущен ранее
+        if (bombTimer) clearInterval(bombTimer);
+        validateBombInputs(); // проверка начальных значений
+    }
+
+    function goBackFromBombSetup() {
+        resetTheme();
+        document.getElementById('bomb-setup').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+        if (bombTimer) clearInterval(bombTimer);
+    }
+
+    function showBombRules() {
+        const modal = document.createElement('div');
+        modal.className = 'rules-modal';
+        modal.innerHTML = `
+            <div class="rules-content">
+                <h3 style="color:#ef4444;">Правила игры «Бомба»</h3>
+                <p>На экране отображается <strong>задание</strong>. Игроки передают устройство друг другу, стараясь выполнить задание перед тем, как передать дальше.</p>
+                <p>Время взрыва выбрано случайно и <strong>никому не известно</strong> (таймер скрыт).</p>
+                <p>Когда время истекает, раздаётся взрыв. Тот, у кого устройство в руках, — <strong>проиграл</strong>.</p>
+                <p>Не задерживайте телефон надолго!</p>
+                <button class="main-btn btn-bomb" style="margin-top:1rem;" onclick="this.parentElement.parentElement.remove()">ПОНЯТНО</button>
+            </div>`;
+        document.body.appendChild(modal);
+        modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+    }
+
+    function startBombGame() {
+        let min = parseInt(document.getElementById('bombMinTime').value) || 20;
+        let max = parseInt(document.getElementById('bombMaxTime').value) || 45;
+        if (min >= max) max = min + 10; // подстраховка, но кнопка уже заблокирована
+        
+        bombTimeRemaining = Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        document.getElementById('bomb-setup').classList.add('hidden');
+        document.getElementById('bomb-game').classList.remove('hidden');
+        document.getElementById('bombLiveArea').classList.remove('hidden');
+        document.getElementById('bombExplodedArea').classList.add('hidden');
+        
+        setNewBombTask();
+        
+        clearInterval(bombTimer);
+        bombTimer = setInterval(() => {
+            bombTimeRemaining--;
+            if (bombTimeRemaining <= 0) {
+                explodeBomb();
+            }
+        }, 1000);
+    }
+
+    function setNewBombTask() {
+        let randomTask = bombTasks[Math.floor(Math.random() * bombTasks.length)];
+        document.getElementById('bombTaskText').innerText = randomTask;
+    }
+
+    function explodeBomb() {
+        clearInterval(bombTimer);
+        document.getElementById('bombLiveArea').classList.add('hidden');
+        document.getElementById('bombExplodedArea').classList.remove('hidden');
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    }
+
+    function resetBombGame() {
+        clearInterval(bombTimer);
+        document.getElementById('bombExplodedArea').classList.add('hidden');
+        document.getElementById('bomb-game').classList.add('hidden');
+        showBombSetup();
+    }
+
+    function endBombGame() {
+        clearInterval(bombTimer);
+        resetTheme();
+        document.getElementById('bomb-game').classList.add('hidden');
+        document.getElementById('main-menu').classList.remove('hidden');
+    }
 
     // ================== ФУНКЦИИ ОБЕЗЬЯНКИ ==================
     function showMonkeySetup() {
@@ -670,13 +863,6 @@
         } else {
             updateMonkeyDealUI();
         }
-    }
-
-    function forceEndMonkeyDeal() {
-        monkeyPlayers = [];
-        monkeyUsedActionIdx.clear();
-        document.getElementById('monkey-deal').classList.add('hidden');
-        document.getElementById('main-menu').classList.remove('hidden');
     }
 
     function showPlayerSelect() {
